@@ -13,15 +13,19 @@ do
     fi
 done
 
+# create sqladmin password and disable sa
 /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P dbatools.IO -d master -i /tmp/create-admin.sql
 
+# rename the server
 /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_dropserver 'buildkitsandbox'"
+
+# import the certificate and create endpoint 
 /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /tmp/create-endpoint.sql
 
 if [ -f "/tmp/primary" ]; then
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'sqltest1', local"
+    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'dockersql1', local"
     /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /tmp/restore-db.sql
     /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /tmp/create-objects.sql
 else
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'sqltest2', local"
+    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'dockersql2', local"
 fi

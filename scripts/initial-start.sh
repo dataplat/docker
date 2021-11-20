@@ -6,5 +6,4 @@ export $(xargs < /tmp/sapassword.env)
 /opt/mssql/bin/sqlservr & sleep 10 & /tmp/setup.sh
 
 # kill the sqlservr process so that it can be started again infinitely by docker
-# systemctl restart mssql-server.service not available
 pkill sqlservr
