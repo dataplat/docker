@@ -1,3 +1,6 @@
+-- Create an endpoint by importing a cert that lasts 100 years
+-- And do it on both servers
+-- This allows the two endpoints to talk to each other
 CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'dbatools.IO'
 GO
 
