@@ -11,7 +11,8 @@ services:
     ports:
       - "1433:1433"
     env_file:
-      - sqlserver.env
+      - sql/sqlserver.env
+      - sql/sapassword.env
   dockersql2:
     container_name: sqltest2
     hostname: sqltest2
@@ -21,4 +22,5 @@ services:
     ports:
       - "14333:1433"
     env_file:
-      - sqlserver.env
+      - sql/sqlserver.env
+      - sql/sapassword.env
