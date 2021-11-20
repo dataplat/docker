@@ -5,9 +5,7 @@ docker-compose down; docker-compose up --build -d
 $containers = docker container ls --format "{{json .}}" | ConvertFrom-Json | Where-Object Names -match sqltest
 
 foreach ($container in $containers) {
-    $thispid = docker inspect -f '{{ .State.Pid }}' $container.ID
-    nsenter --target $thispid --uts
-    #docker commit $container.ID $container.Names
+    docker commit $container.ID $container.Names
 }
 
 docker-compose down

@@ -1,6 +1,5 @@
 # get it
-# build from the Ubuntu 18.04 image
-FROM ubuntu:18.04
+FROM mcr.microsoft.com/mssql/server:2019-latest
 ARG PRIMARYSQL
 
 # switch to root
@@ -14,8 +13,9 @@ RUN chmod +x /tmp/install-mssql.sh
 RUN chmod +x /tmp/change-hostname.sh
 RUN chmod +x /tmp/setup.sh
 
-# run installer
-RUN /bin/bash /tmp/install-mssql.sh
+# update options
+RUN /opt/mssql/bin/mssql-conf set sqlagent.enabled true
+RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled  1
 
 # write a file that designates the primary server
 # this is used in a later step to load up the server
