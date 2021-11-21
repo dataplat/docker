@@ -13,9 +13,14 @@ Some commands, like docker push, require special permissions.
 docker-compose down
 docker-compose up --build -d
 
-# go login to SSMS and import regserver.regsrvr
-# this could be done in dbatools but i like that 
-# it being sl ower gives the containers time to start
+# Sleep for 10 then import some reg
+
+Start-Sleep 10 
+# create a credential
+$password = ConvertTo-SecureString -String dbatools.IO -AsPlainText -Force
+$cred = New-Object PSCredential -ArgumentList "sqladmin", $password
+
+Import-DbaRegServer -SqlInstance localhost -SqlCredential $cred -Path .\sql\cms.regsrvr
 
 # now to commit the images!
 $containers = docker container ls --format "{{json .}}" | ConvertFrom-Json
@@ -25,6 +30,7 @@ $dockersql2 = $containers | Where-Object Names -eq dockersql2
 
 docker commit $dockersql1.ID dbatools/sqlinstance
 docker commit $dockersql2.ID dbatools/sqlinstance2
+
 
 # push out to docker hub
 docker push dbatools/sqlinstance
@@ -37,6 +43,7 @@ docker image rm --force dbatools/sqlinstance2
 
 # give it a good ol prune again
 "y" | docker system prune -a
+
 <#
     Test to ensure the containers work, 
     as they are expected to work at dbatools.io/docker
@@ -46,10 +53,11 @@ docker image rm --force dbatools/sqlinstance2
 docker network create localnet
 
 # setup two containers and expose ports
-docker run -p 1433:1433 -p 5022:5022 --network localnet --hostname dockersql1 --name dockersql1 -d dbatools/sqlinstance
-docker run -p 14333:1433 -p 5023:5023  --network localnet --hostname dockersql2 --name dockersql2 -d dbatools/sqlinstance2
+docker run -p 1433:1433 --network localnet --name dockersql1 -d dbatools/sqlinstance
+docker run -p 14333:1433 --network localnet --name dockersql2 -d dbatools/sqlinstance2
 
-Start-Sleep 5
+
+Start-Sleep 10
 
 # create a credential
 $password = ConvertTo-SecureString -String dbatools.IO -AsPlainText -Force

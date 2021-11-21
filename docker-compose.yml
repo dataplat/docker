@@ -1,6 +1,7 @@
 version: '3.7'
 services:
   dockersql1:
+    restart: on-failure
     container_name: dockersql1
     hostname: dockersql1
     build:
@@ -13,9 +14,8 @@ services:
     env_file:
       - sql/sqlserver.env
       - sql/sapassword.env
-    networks:
-      - localnet
   dockersql2:
+    restart: on-failure
     container_name: dockersql2
     hostname: dockersql2
     build:
@@ -26,7 +26,3 @@ services:
     env_file:
       - sql/sqlserver.env
       - sql/sapassword.env
-    networks:
-      - localnet
-networks:
-  localnet: null
