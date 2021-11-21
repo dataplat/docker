@@ -12,10 +12,10 @@ apt-get install '^libssl1.0.[0-9]$' libunwind8 -y
 wget https://github.com/PowerShell/PowerShell/releases/download/v7.2.0/powershell-7.2.0-linux-arm32.tar.gz
 
 # Make folder to put powershell
-mkdir /bin/powershell
+mkdir ~/powershell
 
 # Unpack the tar.gz file
-tar -xvf ./powershell-7.2.0-linux-arm32.tar.gz -C /bin/powershell
+tar -xvf ./powershell-7.2.0-linux-arm32.tar.gz -C ~/powershell
 
 # Start PowerShell
-/bin/powershell/pwsh /tmp/setup-arm.ps1
+~/powershell/pwsh /tmp/setup-arm.ps1

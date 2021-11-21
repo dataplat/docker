@@ -9,6 +9,7 @@ ARG PRIMARYSQL
 
 # switch to root to a bunch of stuff that requires elevated privs
 USER root
+WORKDIR /tmp
 
 # copy scripts and make bash files executable
 ADD sql /tmp
