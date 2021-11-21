@@ -6,13 +6,19 @@ Some commands, like docker push, require special permissions.
 
 # clean up! This is super destructive as it will remove all images and containers and volumes. You probably don't want to run this.
 docker-compose down
-"y" | docker system prune -a
+#"y" | docker system prune -a
 "y" | docker volume prune 
 "y" | docker builder prune -a
 
 # rebuild the whole thing
 docker-compose down
-docker-compose up --build -d #--force-recreate
+if ($IsMac) {
+    docker-compose up --build -d -f ./docker-compose-arm.yml
+} else {
+    docker-compose up --build -d
+}
+
+
 
 # Sleep for 10 then import some reg
 

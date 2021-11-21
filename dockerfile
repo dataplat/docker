@@ -1,5 +1,7 @@
+ARG IMAGE
+
 # get the latest SQL container
-FROM mcr.microsoft.com/mssql/server:2019-latest
+FROM $IMAGE
 
 # add an argument that will later help designate the primary sql server
 # which needs to have a bunch of objects like databases and logins added to it
