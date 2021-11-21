@@ -16,10 +16,6 @@ ADD scripts /tmp
 RUN chmod +x /tmp/initial-start.sh
 RUN chmod +x /tmp/setup.sh
 
-# update options for SQL Agent and HA
-RUN /opt/mssql/bin/mssql-conf set sqlagent.enabled true
-RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled  1
-
 # write a file that designates the primary server
 # this is used in a later step to load up the server
 RUN if [ $PRIMARYSQL ]; then touch /tmp/primary; fi

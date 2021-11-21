@@ -1,6 +1,8 @@
 # load up environment variables
-export $(xargs < /tmp/sqlserver.env)
 export $(xargs < /tmp/sapassword.env)
+
+# set the configs
+cp /tmp/mssql.conf /var/opt/mssql/mssql.conf 
 
 # startup, wait for it to finish starting
 # then run the setup script

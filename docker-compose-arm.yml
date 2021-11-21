@@ -13,7 +13,6 @@ services:
     ports:
       - "1433:1433"
     env_file:
-      - sql/sqlserver.env
       - sql/sapassword.env
   dockersql2:
     restart: on-failure
@@ -27,5 +26,4 @@ services:
     ports:
       - "14333:1433"
     env_file:
-      - sql/sqlserver.env
       - sql/sapassword.env
