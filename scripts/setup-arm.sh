@@ -10,5 +10,5 @@ mkdir /tmp/powershell
 # Unpack the tar.gz file
 tar -xvf ./powershell-7.2.0-linux-arm64.tar.gz -C /tmp/powershell
 
-# Start PowerShell
+# Execute script
 /tmp/powershell/pwsh /tmp/setup-arm.ps1

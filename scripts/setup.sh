@@ -19,9 +19,6 @@ done
 # rename the server
 /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_dropserver 'buildkitsandbox'"
 
-# import the certificate and create endpoint 
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /tmp/create-endpoint.sql
-
 # if it's the primary server, restore pubs and northwind and create a bunch of objects
 if [ -f "/tmp/primary" ]; then
     /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'dockersql1', local"
@@ -30,3 +27,6 @@ if [ -f "/tmp/primary" ]; then
 else
     /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'dockersql2', local"
 fi
+
+# import the certificate and create endpoint 
+/opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /tmp/create-endpoint.sql
