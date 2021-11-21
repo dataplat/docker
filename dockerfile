@@ -12,8 +12,7 @@ USER root
 WORKDIR /tmp
 
 # copy scripts and make bash files executable
-ADD sql /tmp
-ADD scripts /tmp
+ADD sql scripts /tmp/
 RUN chmod +x /tmp/*.sh
 
 # write a file that designates the primary server

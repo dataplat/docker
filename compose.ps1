@@ -13,7 +13,7 @@ docker-compose down
 # rebuild the whole thing
 docker-compose down
 if ($IsMac) {
-    docker-compose -f ./docker-compose-arm.yml up --force-recreate --build -d
+    docker builder prune -a -f ; docker-compose down ; docker-compose -f ./docker-compose-arm.yml up --force-recreate --build -d
 } else {
     docker-compose up --force-recreate --build -d
 }
