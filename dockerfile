@@ -25,4 +25,4 @@ RUN if [ $PRIMARYSQL ]; then touch /tmp/primary; fi
 # run initial setup scripts then start the service for good
 USER mssql
 RUN /bin/bash /tmp/initial-start.sh
-CMD /opt/mssql/bin/sqlservr
+ENTRYPOINT /opt/mssql/bin/sqlservr
