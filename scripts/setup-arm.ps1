@@ -16,6 +16,8 @@ try {
 } catch {
     Start-Sleep 5
 }
+
+$PSDefaultParameterValues["*Dba*:ErrorAction"] = "SilentlyContinue"
 # create sqladmin password and disable sa
 Invoke-DbaQuery -SqlCredential $credsa -File /tmp/create-admin.sql
 
