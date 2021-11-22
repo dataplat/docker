@@ -38,10 +38,30 @@ $dockersql2 = $containers | Where-Object Names -eq dockersql2
 docker commit $dockersql1.ID dbatools/sqlinstance
 docker commit $dockersql2.ID dbatools/sqlinstance2
 
+if ($IsMac) {
+    docker commit $dockersql1.ID dbatools/sqlinstance:latest-arm64
+    docker commit $dockersql2.ID dbatools/sqlinstance2:latest-arm64
+    
+    # push out to docker hub
+    docker push dbatools/sqlinstance:latest-arm64
+    docker push dbatools/sqlinstance2:latest-arm64
+} else {
+    docker commit $dockersql1.ID dbatools/sqlinstance:latest-amd64
+    docker commit $dockersql2.ID dbatools/sqlinstance2:latest-amd64
+    
+    # push out to docker hub
+    docker push dbatools/sqlinstance:latest-amd64
+    docker push dbatools/sqlinstance2:latest-amd64
+}
 
-# push out to docker hub
-docker push dbatools/sqlinstance
-docker push dbatools/sqlinstance2
+docker manifest create dbatools/sqlinstance:latest --amend dbatools/sqlinstance:latest-amd64 --amend dbatools/sqlinstance:latest-arm64
+docker manifest create dbatools/sqlinstance2:latest --amend dbatools/sqlinstance2:latest-amd64 --amend dbatools/sqlinstance2:latest-arm64
+
+docker manifest inspect docker.io/dbatools/sqlinstance:latest
+docker manifest inspect docker.io/dbatools/sqlinstance2:latest
+
+docker manifest push docker.io/dbatools/sqlinstance:latest
+docker manifest push docker.io/dbatools/sqlinstance2:latest
 
 # stop and remove the containers and images
 docker-compose down
