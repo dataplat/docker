@@ -34,8 +34,6 @@ $containers = docker container ls --format "{{json .}}" | ConvertFrom-Json
 $dockersql1 = $containers | Where-Object Names -eq dockersql1
 $dockersql2 = $containers | Where-Object Names -eq dockersql2
 
-
-
 docker commit $dockersql1.ID dbatools/sqlinstance:latest-amd64
 docker commit $dockersql2.ID dbatools/sqlinstance2:latest-amd64
     
@@ -69,15 +67,30 @@ docker image rm --force dbatools/sqlinstance2:latest-amd64
 # create a shared network
 docker network create localnet
 
-# setup two containers and expose ports
-docker run -p 1433:1433 --network localnet --name dockersql1 -d dbatools/sqlinstance
-docker run -p 14333:1433 --network localnet --name dockersql2 -d dbatools/sqlinstance2
+# Expose engine and endpoint then setup a shared path for migrations
+docker run -p 1433:1433 --volume C:\temp\shared:/sharedpath --network localnet --hostname dockersql1 --name dockersql1 -d dbatools/sqlinstance
+# Expose second engine and endpoint on different port
+docker run -p 14333:1433 --volume C:\temp\shared:/sharedpath  --network localnet --hostname dockersql2 --name dockersql2 -d dbatools/sqlinstance2
 
 Start-Sleep 10
 
 # create a credential
 $password = ConvertTo-SecureString -String dbatools.IO -AsPlainText -Force
 $cred = New-Object PSCredential -ArgumentList "sqladmin", $password
+
+$params = @{
+    Source                   = "localhost"
+    SourceSqlCredential      = $cred
+    Destination              = "localhost:14333"
+    DestinationSqlCredential = $cred
+    BackupRestore            = $true
+    SharedPath               = "/sharedpath"
+    Exclude                  = "LinkedServers", "Credentials", "BackupDevices"
+}
+
+Start-DbaMigration @params | Out-GridView
+
+Get-DbaDatabase -SqlInstance localhost:14333 -SqlCredential $cred -Database Northwind, pubs | Remove-DbaDatabase -Confirm:$false
 
 # setup a powershell splat
 $params = @{
