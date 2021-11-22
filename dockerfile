@@ -9,17 +9,18 @@ ARG PRIMARYSQL
 
 # switch to root to a bunch of stuff that requires elevated privs
 USER root
-WORKDIR /tmp
 
 # copy scripts and make bash files executable
-ADD sql scripts /tmp/
-RUN chmod +x /tmp/*.sh
+RUN mkdir /app
+WORKDIR /app
+ADD sql scripts /app/
+RUN chmod +x /app/*.sh
 
 # write a file that designates the primary server
 # this is used in a later step to load up the server
-RUN if [ $PRIMARYSQL ]; then touch /tmp/primary; fi
+RUN if [ $PRIMARYSQL ]; then touch /app/primary; fi
 
 # run initial setup scripts then start the service for good
 USER mssql
-RUN /bin/bash /tmp/initial-start.sh
+RUN /bin/bash /app/initial-start.sh
 ENTRYPOINT /opt/mssql/bin/sqlservr

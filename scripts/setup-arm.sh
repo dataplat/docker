@@ -5,10 +5,10 @@
 wget https://github.com/PowerShell/PowerShell/releases/download/v7.2.0/powershell-7.2.0-linux-arm64.tar.gz
 
 # Make folder to put powershell
-mkdir /tmp/powershell
+mkdir /app/powershell
 
 # Unpack the tar.gz file
-tar -xvf ./powershell-7.2.0-linux-arm64.tar.gz -C /tmp/powershell
+tar -xvf ./powershell-7.2.0-linux-arm64.tar.gz -C /app/powershell
 
 # Execute script
-/tmp/powershell/pwsh /tmp/setup-arm.ps1
+/app/powershell/pwsh /app/setup-arm.ps1
