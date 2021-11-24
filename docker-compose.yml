@@ -14,6 +14,8 @@ services:
       - "1433:1433"
     env_file:
       - sql/sapassword.env
+    volumes:
+      - shared:/shared:rw
   dockersql2:
     restart: on-failure
     container_name: dockersql2
@@ -27,3 +29,8 @@ services:
       - "14333:1433"
     env_file:
       - sql/sapassword.env
+    volumes:
+      - shared:/shared:rw
+
+volumes:
+  shared: null

@@ -11,7 +11,7 @@ ARG PRIMARYSQL
 USER root
 
 # copy scripts and make bash files executable
-RUN mkdir /app
+RUN mkdir /app /shared; chown mssql /shared
 WORKDIR /app
 ADD sql scripts /app/
 RUN chmod +x /app/*.sh
