@@ -24,20 +24,20 @@ try {
 $PSDefaultParameterValues["*Dba*:ErrorAction"] = "SilentlyContinue"
 
 # create sqladmin login and disable sa
-Invoke-DbaQuery -SqlCredential $credsa -File /app/create-admin.sql
+Invoke-DbaQuery -SqlCredential $credsa -File /dbatools-setup/create-admin.sql
 
 # rename the server
 Invoke-DbaQuery -Query "EXEC sp_dropserver 'buildkitsandbox'"
 
 # if it's the primary server, restore pubs and northwind and create a bunch of objects
-if ((Test-Path "/app/primary")) {
+if ((Test-Path "/dbatools-setup/primary")) {
     Invoke-DbaQuery -Query "EXEC sp_addserver 'mssql1', local"
-    Invoke-DbaQuery -File /app/restore-db.sql
-    Invoke-DbaQuery -File /app/create-objects.sql
-    Invoke-DbaQuery -File /app/create-regserver.sql
+    Invoke-DbaQuery -File /dbatools-setup/restore-db.sql
+    Invoke-DbaQuery -File /dbatools-setup/create-objects.sql
+    Invoke-DbaQuery -File /dbatools-setup/create-regserver.sql
 } else {
     Invoke-DbaQuery -Query "EXEC sp_addserver 'mssql2', local"
 }
 
 # import the certificate and create endpoint 
-Invoke-DbaQuery -File /app/create-endpoint.sql
+Invoke-DbaQuery -File /dbatools-setup/create-endpoint.sql

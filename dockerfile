@@ -12,17 +12,17 @@ USER root
 
 # copy scripts and make bash files executable
 # also create a shared directory and make it writable by mssql
-RUN mkdir /app /shared
-WORKDIR /app
-ADD sql scripts /app/
-RUN chmod +x /app/*.sh
+RUN mkdir /dbatools-setup /shared
+WORKDIR /dbatools-setup
+ADD sql scripts /dbatools-setup/
+RUN chmod +x /dbatools-setup/*.sh
 RUN chown mssql /shared
 
 # write a file that designates the primary server
 # this is used in a later step to load up the server
-RUN if [ $PRIMARYSQL ]; then touch /app/primary; fi
+RUN if [ $PRIMARYSQL ]; then touch /dbatools-setup/primary; fi
 
 # run initial setup scripts then start the service for good
 USER mssql
-RUN /bin/bash /app/initial-start.sh
+RUN /bin/bash /dbatools-setup/initial-start.sh
 ENTRYPOINT /opt/mssql/bin/sqlservr

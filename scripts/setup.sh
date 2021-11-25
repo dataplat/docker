@@ -14,20 +14,20 @@ do
 done
 
 # create sqladmin password and disable sa
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P dbatools.IO -d master -i /app/create-admin.sql
+/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P dbatools.IO -d master -i /dbatools-setup/create-admin.sql
 
 # rename the server
 /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_dropserver 'buildkitsandbox'"
 
 # if it's the primary server, restore pubs and northwind and create a bunch of objects
-if [ -f "/app/primary" ]; then
+if [ -f "/dbatools-setup/primary" ]; then
     /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'mssql1', local"
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /app/restore-db.sql
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /app/create-objects.sql
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /app/create-regserver.sql
+    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /dbatools-setup/restore-db.sql
+    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /dbatools-setup/create-objects.sql
+    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /dbatools-setup/create-regserver.sql
 else
     /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'mssql2', local"
 fi
 
 # import the certificate and create endpoint 
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /app/create-endpoint.sql
+/opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /dbatools-setup/create-endpoint.sql
