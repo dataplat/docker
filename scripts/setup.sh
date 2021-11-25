@@ -21,12 +21,12 @@ done
 
 # if it's the primary server, restore pubs and northwind and create a bunch of objects
 if [ -f "/app/primary" ]; then
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'dockersql1', local"
+    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'mssql1', local"
     /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /app/restore-db.sql
     /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /app/create-objects.sql
     /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /app/create-regserver.sql
 else
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'dockersql2', local"
+    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'mssql2', local"
 fi
 
 # import the certificate and create endpoint 

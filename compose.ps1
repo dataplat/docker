@@ -22,20 +22,6 @@ docker-compose up --force-recreate --build -d
 # Sleep for 10 then import some reg
 
 Start-Sleep 10 
-# create a credential
-$password = ConvertTo-SecureString -String dbatools.IO -AsPlainText -Force
-$cred = New-Object PSCredential -ArgumentList "sqladmin", $password
-
-Import-DbaRegServer -SqlInstance localhost -SqlCredential $cred -Path .\sql\cms.regsrvr
-
-# now to commit the images!
-$containers = docker container ls --format "{{json .}}" | ConvertFrom-Json
-
-$dockersql1 = $containers | Where-Object Names -eq dockersql1
-$dockersql2 = $containers | Where-Object Names -eq dockersql2
-
-docker commit $dockersql1.ID dbatools/sqlinstance:latest-amd64
-docker commit $dockersql2.ID dbatools/sqlinstance2:latest-amd64
     
 # push out to docker hub
 docker push dbatools/sqlinstance:latest-amd64
@@ -67,10 +53,27 @@ docker image rm --force dbatools/sqlinstance2:latest-amd64
 # create a shared network
 docker network create localnet
 
+# created shared drive
+docker volume create shared
+
 # Expose engine and endpoint then setup a shared path for migrations
-docker run -p 1433:1433 --volume C:\temp\shared:/sharedpath --network localnet --hostname dockersql1 --name dockersql1 -d dbatools/sqlinstance
+docker run -p 14333:1433 --name mssql1 --network localnet --mount 'source=shared,target=/shared' -d dbatools/sqlinstance
 # Expose second engine and endpoint on different port
-docker run -p 14333:1433 --volume C:\temp\shared:/sharedpath  --network localnet --hostname dockersql2 --name dockersql2 -d dbatools/sqlinstance2
+docker run -p 14334:1433 --name mssql2 --network localnet --mount 'source=shared,target=/shared' -d dbatools/sqlinstance2
+
+
+Start-Sleep 10
+
+# create a shared network
+docker network create localnet
+
+# created shared drive
+docker volume create shared
+
+# Expose engine and endpoint then setup a shared path for migrations
+docker run -p 14333:1433 --name mssql1 --network localnet --mount 'source=shared,target=/shared' -d dbatools/sqlinstance:latest-amd64
+# Expose second engine and endpoint on different port
+docker run -p 14334:1433 --name mssql2 --network localnet --mount 'source=shared,target=/shared' -d dbatools/sqlinstance2:latest-amd64
 
 Start-Sleep 10
 
@@ -79,24 +82,24 @@ $password = ConvertTo-SecureString -String dbatools.IO -AsPlainText -Force
 $cred = New-Object PSCredential -ArgumentList "sqladmin", $password
 
 $params = @{
-    Source                   = "localhost"
+    Source                   = "localhost:14333"
     SourceSqlCredential      = $cred
-    Destination              = "localhost:14333"
+    Destination              = "localhost:14334"
     DestinationSqlCredential = $cred
     BackupRestore            = $true
-    SharedPath               = "/sharedpath"
+    SharedPath               = "/shared"
     Exclude                  = "LinkedServers", "Credentials", "BackupDevices"
 }
 
 Start-DbaMigration @params | Out-GridView
 
-Get-DbaDatabase -SqlInstance localhost:14333 -SqlCredential $cred -Database Northwind, pubs | Remove-DbaDatabase -Confirm:$false
+Get-DbaDatabase | Remove-DbaDatabase -SqlInstance localhost:14334 -SqlCredential $cred -Database Northwind, pubs -Confirm:$false
 
 # setup a powershell splat
 $params = @{
-    Primary                = "localhost"
+    Primary                = "localhost:14333"
     PrimarySqlCredential   = $cred
-    Secondary              = "localhost:14333"
+    Secondary              = "localhost:14334"
     SecondarySqlCredential = $cred
     Name                   = "test-ag"
     Database               = "pubs"
@@ -108,3 +111,29 @@ $params = @{
 
 # execute the command
 New-DbaAvailabilityGroup @params
+
+
+$password = ConvertTo-SecureString "dbatools.IO" -AsPlainText -Force
+$cred = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "sqladmin", $password
+
+$PSDefaultParameterValues["*:SqlInstance"] = "localhost:14333"
+$PSDefaultParameterValues["*:Source"] = "localhost:14333"
+$PSDefaultParameterValues["*:Destination"] = "localhost:14334"
+$PSDefaultParameterValues["*:Primary"] = "localhost:14333"
+$PSDefaultParameterValues["*:Mirror"] = "localhost:14334"
+$PSDefaultParameterValues["*:SqlCredential"] = $cred
+$PSDefaultParameterValues["*:SourceSqlCredential"] = $cred
+$PSDefaultParameterValues["*:DestinationSqlCredential"] = $cred
+$PSDefaultParameterValues["*:PrimarySqlCredential"] = $cred
+$PSDefaultParameterValues["*:MirrorSqlCredential"] = $cred
+$PSDefaultParameterValues["*:WitnessSqlCredential"] = $cred
+$PSDefaultParameterValues["*:Confirm"] = $false
+$PSDefaultParameterValues["*:SharedPath"] = "/shared"
+
+$newdb = New-DbaDatabase
+$params = @{
+    Database = $newdb.Name
+    Force    = $true
+}
+
+Invoke-DbaDbMirroring @params

@@ -22,11 +22,11 @@ docker-compose -f ./docker-compose-arm.yml up --force-recreate --build -d
 # now to commit the images!
 $containers = docker container ls --format "{{json .}}" | ConvertFrom-Json
 
-$dockersql1 = $containers | Where-Object Names -eq dockersql1
-$dockersql2 = $containers | Where-Object Names -eq dockersql2
+$mssql1 = $containers | Where-Object Names -eq mssql1
+$mssql2 = $containers | Where-Object Names -eq mssql2
 
-docker commit $dockersql1.ID dbatools/sqlinstance:latest-arm64
-docker commit $dockersql2.ID dbatools/sqlinstance2:latest-arm64
+docker commit $mssql1.ID dbatools/sqlinstance:latest-arm64
+docker commit $mssql2.ID dbatools/sqlinstance2:latest-arm64
 
 # push out to docker hub
 docker push dbatools/sqlinstance:latest-arm64
@@ -61,9 +61,9 @@ docker image rm --force dbatools/sqlinstance2:latest-arm64
 docker network create localnet
 
 # Expose engine and endpoint then setup a shared path for migrations
-docker run -p 1433:1433 --volume /tmp:/sharedpath --network localnet --hostname dockersql1 --name dockersql1 -d dbatools/sqlinstance
+docker run -p 14333:1433 --volume /tmp:/sharedpath --network localnet --hostname mssql1 --name mssql1 -d dbatools/sqlinstance
 # Expose second engine and endpoint on different port
-docker run -p 14333:1433 --volume /tmp:/sharedpath  --network localnet --hostname dockersql2 --name dockersql2 -d dbatools/sqlinstance2
+docker run -p 14333:1433 --volume /tmp:/sharedpath  --network localnet --hostname mssql2 --name mssql2 -d dbatools/sqlinstance2
 
 # let it finish starting
 Start-Sleep 10

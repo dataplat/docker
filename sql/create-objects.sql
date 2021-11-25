@@ -34,7 +34,7 @@ EXEC msdb.dbo.sysmail_configure_sp @parameter_name=N'ProhibitedExtensions', @par
 GO
 
 /*
-	Created by workstationx\ctrlb using dbatools Export-DbaScript for objects on dockersql1 at 11/18/2021 16:45:24
+	Created by workstationx\ctrlb using dbatools Export-DbaScript for objects on mssql1 at 11/18/2021 16:45:24
 	See https://dbatools.io/Export-DbaScript for more information
 */
 EXEC msdb.dbo.sysmail_add_account_sp @account_name=N'The DBA Team', 
@@ -57,7 +57,7 @@ GO
 -- extended events
 
 /*
-	Created by workstationx\ctrlb using dbatools Export-DbaXESession for objects on dockersql1 at 2021-11-18 16:45:46.007
+	Created by workstationx\ctrlb using dbatools Export-DbaXESession for objects on mssql1 at 2021-11-18 16:45:46.007
 	See https://dbatools.io/Export-DbaXESession for more information
 */
 CREATE EVENT SESSION [AlwaysOn_health_new] ON SERVER 
@@ -648,7 +648,7 @@ EXEC msdb.dbo.sp_add_operator @name=N'The DBA Team',
 GO
 
 /*
-	Created by workstationx\ctrlb using dbatools Export-DbaScript for objects on dockersql1 at 11/18/2021 16:45:48
+	Created by workstationx\ctrlb using dbatools Export-DbaScript for objects on mssql1 at 11/18/2021 16:45:48
 	See https://dbatools.io/Export-DbaScript for more information
 */
 EXEC msdb.dbo.sp_add_alert @name=N'Error Number 823', 
@@ -912,7 +912,7 @@ EXEC msdb.dbo.sp_add_alert @name=N'Severity 025',
 GO
 
 /*
-	Created by workstationx\ctrlb using dbatools Export-DbaScript for objects on dockersql1 at 11/18/2021 16:45:49
+	Created by workstationx\ctrlb using dbatools Export-DbaScript for objects on mssql1 at 11/18/2021 16:45:49
 	See https://dbatools.io/Export-DbaScript for more information
 */
 EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_10min', 
@@ -1126,7 +1126,7 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'RunAsSQLAgentServiceStartSchedule
 GO
 
 /*
-	Created by workstationx\ctrlb using dbatools Export-DbaScript for objects on dockersql1 at 11/18/2021 16:45:50
+	Created by workstationx\ctrlb using dbatools Export-DbaScript for objects on mssql1 at 11/18/2021 16:45:50
 	See https://dbatools.io/Export-DbaScript for more information
 */
 BEGIN TRANSACTION
