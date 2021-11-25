@@ -18,7 +18,7 @@ services:
     env_file:
       - sql/sapassword.env
     volumes:
-      - shared:/shared:rw
+      - shared:/shared:z
   mssql2:
     restart: on-failure
     networks:
@@ -36,7 +36,7 @@ services:
     env_file:
       - sql/sapassword.env
     volumes:
-      - shared:/shared:rw
+      - shared:/shared:z
 
 networks:
   localnet: null

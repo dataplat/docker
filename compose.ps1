@@ -36,6 +36,7 @@ docker manifest create dbatools/sqlinstance2:latest --amend dbatools/sqlinstance
 docker manifest push docker.io/dbatools/sqlinstance:latest
 docker manifest push docker.io/dbatools/sqlinstance2:latest
 
+
 # stop and remove the containers and images
 docker-compose down
 docker image rm --force dbatools/sqlinstance
@@ -57,10 +58,11 @@ docker network create localnet
 docker volume create shared
 
 # Expose engine and endpoint then setup a shared path for migrations
-docker run -p 14333:1433 --name mssql1 --network localnet --mount 'source=shared,target=/shared' -d dbatools/sqlinstance
+docker run -p 14333:1433 --volume shared:/shared:z --name mssql1 --network localnet -d dbatools/sqlinstance:latest-amd64
 # Expose second engine and endpoint on different port
-docker run -p 14334:1433 --name mssql2 --network localnet --mount 'source=shared,target=/shared' -d dbatools/sqlinstance2
+docker run -p 14334:1433 --volume shared:/shared:z --name mssql2 --network localnet -d dbatools/sqlinstance2:latest-amd64
 
+# --volume shared:/shared:z
 
 Start-Sleep 10
 
@@ -137,3 +139,4 @@ $params = @{
 }
 
 Invoke-DbaDbMirroring @params
+

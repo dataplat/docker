@@ -11,10 +11,12 @@ ARG PRIMARYSQL
 USER root
 
 # copy scripts and make bash files executable
-RUN mkdir /app /shared; chown mssql /shared
+# also create a shared directory and make it writable by mssql
+RUN mkdir /app /shared
 WORKDIR /app
 ADD sql scripts /app/
 RUN chmod +x /app/*.sh
+RUN chown mssql /shared
 
 # write a file that designates the primary server
 # this is used in a later step to load up the server
