@@ -34,7 +34,7 @@ if ((Test-Path "/app/primary")) {
     Invoke-DbaQuery -Query "EXEC sp_addserver 'dockersql1', local"
     Invoke-DbaQuery -File /app/restore-db.sql
     Invoke-DbaQuery -File /app/create-objects.sql
-    Import-DbaRegServer -Path /app/cms.regsrvr
+    Invoke-DbaQuery -File /app/create-regserver.sql
 } else {
     Invoke-DbaQuery -Query "EXEC sp_addserver 'dockersql2', local"
 }
