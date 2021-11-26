@@ -1,7 +1,5 @@
 # from image passed in dockerfile (either arm or x64)
 ARG IMAGE
-ARG FINALIMAGE
-ARG BUILD_DATE
 
 # get the latest SQL container
 FROM $IMAGE as builder
@@ -11,7 +9,6 @@ ARG PRIMARYSQL
 
 # label the container
 LABEL io.dbatools.version="1.0.0"
-LABEL io.dbatools.build-date=$BUILD_DATE
 LABEL io.dbatools.schema-version=1.0
 LABEL vendor="dbatools"
 LABEL maintainer="clemaire@dbatools.io"
@@ -21,12 +18,12 @@ USER root
 
 # copy scripts and make bash files executable
 # also create a shared directory and make it writable by mssql
-RUN mkdir /dbatools-setup /shared
+RUN mkdir /dbatools-setup /dbatools-setup/powershell /shared
 WORKDIR /dbatools-setup
 # use copy instead of add, it's safer
 COPY sql scripts /dbatools-setup/
 # put as much as possible on one line to reduce image size
-RUN chmod +x /dbatools-setup/*.sh; chown mssql /shared
+RUN chmod +x /dbatools-setup/*.sh; chown -R mssql /shared /dbatools-setup
 
 # write a file that designates the primary server
 # this is used in a later step to load up the server

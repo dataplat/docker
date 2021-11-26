@@ -13,8 +13,6 @@ services:
       args:
         PRIMARYSQL: "TRUE"
         IMAGE: "mcr.microsoft.com/mssql/server:2019-latest"
-        FINALIMAGE: "dbatools/sqlinstance:latest-amd64"
-        BUILD_DATE: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
     ports:
       - "1433:1433"
     env_file:
@@ -33,8 +31,6 @@ services:
       dockerfile: dockerfile
       args:
         IMAGE: "mcr.microsoft.com/mssql/server:2019-latest"
-        FINALIMAGE: "dbatools/sqlinstance2:latest-amd64"
-        BUILD_DATE: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
     ports:
       - "14333:1433"
     env_file:

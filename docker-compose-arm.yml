@@ -13,8 +13,6 @@ services:
       args:
         PRIMARYSQL: "TRUE"
         IMAGE: "mcr.microsoft.com/azure-sql-edge"
-        FINALIMAGE: "dbatools/sqlinstance:latest-arm64"
-        BUILD_DATE: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
     ports:
       - "1433:1433"
     env_file:
@@ -33,8 +31,6 @@ services:
       dockerfile: dockerfile
       args:
         IMAGE: "mcr.microsoft.com/azure-sql-edge"
-        FINALIMAGE: "dbatools/sqlinstance2:latest-arm64"
-        BUILD_DATE: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
     ports:
       - "14333:1433"
     env_file:
