@@ -16,7 +16,7 @@ RUN mkdir /dbatools-setup /shared
 WORKDIR /dbatools-setup
 ADD sql scripts /dbatools-setup/
 RUN chmod +x /dbatools-setup/*.sh
-RUN chown mssql /shared
+RUN chown mssql /shared /dbatools-setup
 
 # write a file that designates the primary server
 # this is used in a later step to load up the server
