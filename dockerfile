@@ -1,12 +1,20 @@
 # from image passed in dockerfile (either arm or x64)
 ARG IMAGE
 ARG FINALIMAGE
+ARG BUILD_DATE
 
 # get the latest SQL container
 FROM $IMAGE as builder
 
 # add an argument that will later help designate the stocked sql server
 ARG PRIMARYSQL
+
+# label the container
+LABEL io.dbatools.version="1.0.0"
+LABEL io.dbatools.build-date=$BUILD_DATE
+LABEL io.dbatools.schema-version=1.0
+LABEL vendor="dbatools"
+LABEL maintainer="clemaire@dbatools.io"
 
 # switch to root to a bunch of stuff that requires elevated privs
 USER root
@@ -30,5 +38,8 @@ USER mssql
 RUN /bin/bash /dbatools-setup/initial-start.sh
 
 #This is the final stage, and we copy artifacts from "builder"
-FROM $FINALIMAGE
+FROM $IMAGE
+COPY --from=builder /shared /shared
+COPY --from=builder /var/opt/mssql /var/opt/mssql
+
 ENTRYPOINT /opt/mssql/bin/sqlservr
