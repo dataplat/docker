@@ -1,0 +1,18 @@
+# ignore the basics
+.cache
+.DS_Store
+.thumbsdb
+.git
+.gitattributes
+.gitignore
+.env
+
+###  VisualStudioCode ###
+.vscode/
+
+###  Project ### 
+.dockerignore
+dockerfile
+LICENSE
+README.md
+*.ps1
