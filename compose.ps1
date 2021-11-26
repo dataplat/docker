@@ -118,11 +118,11 @@ New-DbaAvailabilityGroup @params
 $password = ConvertTo-SecureString "dbatools.IO" -AsPlainText -Force
 $cred = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "sqladmin", $password
 
-$PSDefaultParameterValues["*:SqlInstance"] = "localhost:14333"
-$PSDefaultParameterValues["*:Source"] = "localhost:14333"
-$PSDefaultParameterValues["*:Destination"] = "localhost:14334"
-$PSDefaultParameterValues["*:Primary"] = "localhost:14333"
-$PSDefaultParameterValues["*:Mirror"] = "localhost:14334"
+$PSDefaultParameterValues["*:SqlInstance"] = "localhost"
+$PSDefaultParameterValues["*:Source"] = "localhost"
+$PSDefaultParameterValues["*:Destination"] = "localhost:14333"
+$PSDefaultParameterValues["*:Primary"] = "localhost"
+$PSDefaultParameterValues["*:Mirror"] = "localhost:14333"
 $PSDefaultParameterValues["*:SqlCredential"] = $cred
 $PSDefaultParameterValues["*:SourceSqlCredential"] = $cred
 $PSDefaultParameterValues["*:DestinationSqlCredential"] = $cred
