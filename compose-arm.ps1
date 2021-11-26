@@ -50,20 +50,24 @@ docker image rm --force dbatools/sqlinstance
 docker image rm --force dbatools/sqlinstance2
 docker image rm --force dbatools/sqlinstance:latest-arm64
 docker image rm --force dbatools/sqlinstance2:latest-arm64
+"y" | docker system prune -a
+"y" | docker volume prune   
 # give it a good ol prune again
 # "y" | docker system prune -a
 
 <#
     Test to ensure the containers work
 #>
-
-# Create network for nodes to talk to each other
+# create a shared network
 docker network create localnet
 
-# Expose engine and endpoint then setup a shared path for migrations
-docker run -p 14333:1433 --volume /tmp:/sharedpath --network localnet --hostname mssql1 --name mssql1 -d dbatools/sqlinstance
-# Expose second engine and endpoint on different port
-docker run -p 14333:1433 --volume /tmp:/sharedpath  --network localnet --hostname mssql2 --name mssql2 -d dbatools/sqlinstance2
+# created shared drive
+docker volume create shared
+
+# Expose engines and setup shared path for migrations
+docker run -p 1433:1433 --volume shared:/shared:z --name dockersql1 --hostname dockersql1 --network localnet -d dbatools/sqlinstance
+docker run -p 14333:1433 --volume shared:/shared:z --name dockersql2 --hostname dockersql2 --network localnet -d dbatools/sqlinstance2
+
 
 # let it finish starting
 Start-Sleep 10
