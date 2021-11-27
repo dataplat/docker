@@ -17,7 +17,7 @@ docker rmi $(docker images -q)
 #>
 # rebuild the whole thing with no caches
 
-docker-compose down
+docker-compose down --volumes
 docker volume prune -f
 docker image prune -f
 docker builder prune -a -f
