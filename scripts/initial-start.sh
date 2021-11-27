@@ -15,7 +15,3 @@ if [ "$arch" = "aarch64" ]; then
  else
     /opt/mssql/bin/sqlservr & sleep 10 & /tmp/setup.sh
 fi
-
-# kill the sqlservr process so that it 
-# can be started again infinitely by docker
-pkill sqlservr
