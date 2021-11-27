@@ -15,10 +15,10 @@ docker rmi $(docker images -q)
 docker network create localnet
 
 # Expose engine then setup a shared path for migrations
-docker run -p 1433:1433 --volume shared:/shared:z --name mssql1 --network localnet -d dbatools/sqlinstance
+docker run -p 1433:1433 --volume shared:/shared:z --hostname mssql1 --name mssql1 --network localnet -d dbatools/sqlinstance
 
 # Expose second engine on different port and use the same shared path
-docker run -p 14333:1433 --volume shared:/shared:z --name mssql2 --network localnet -d dbatools/sqlinstance2
+docker run -p 14333:1433 --volume shared:/shared:z --hostname mssql2 --name mssql2 --network localnet -d dbatools/sqlinstance2
 
 Start-Sleep 10
 
@@ -68,8 +68,7 @@ $params = @{
     Database             = $newdb.Name
     SharedPath           = "/shared"
     Force                = $true
-    Verbose              = $true
+    Verbose              = $false
 }
 
 Invoke-DbaDbMirroring @params
-

@@ -17,12 +17,17 @@ docker rmi $(docker images -q)
 #>
 # rebuild the whole thing with no caches
 docker-compose down
+docker volume prune -f
+docker image prune -f
 docker builder prune -a -f
-docker-compose -f ./docker-compose-arm.yml up --force-recreate --build -d
+docker-compose -f ./docker-compose-arm.yml up --force-recreate --build --remove-orphans -d
 
 # push out to docker hub
 docker push dbatools/sqlinstance:latest-arm64
 docker push dbatools/sqlinstance2:latest-arm64
+
+# Remove manifest cache
+Remove-Item $HOME/.docker/manifests -Recurse -Force
 
 # Create manifests that support  multiple architectures
 docker manifest create dbatools/sqlinstance:latest --amend dbatools/sqlinstance:latest-amd64 --amend dbatools/sqlinstance:latest-arm64
@@ -33,5 +38,5 @@ docker manifest inspect docker.io/dbatools/sqlinstance:latest
 docker manifest inspect docker.io/dbatools/sqlinstance2:latest
 
 # push out to docker
-docker manifest push docker.io/dbatools/sqlinstance:latest
-docker manifest push docker.io/dbatools/sqlinstance2:latest
+docker manifest push docker.io/dbatools/sqlinstance:latest --purge
+docker manifest push docker.io/dbatools/sqlinstance2:latest --purge
