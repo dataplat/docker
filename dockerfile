@@ -12,7 +12,6 @@ ARG PRIMARYSQL
 # label the container
 LABEL io.dbatools.version="1.0.0"
 LABEL io.dbatools.schema-version=1.0
-LABEL vendor="dbatools"
 LABEL maintainer="clemaire@dbatools.io"
 
 # switch to root to a bunch of stuff that requires elevated privs
