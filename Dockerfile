@@ -6,11 +6,6 @@ ARG IMAGE
 # then just keep the results
 FROM $IMAGE as builder
 
-# grab powershell from the dotnet sdk container
-# there's no powershell tag yet for arm64
-# also how cool is this??
-COPY --from=mcr.microsoft.com/dotnet/sdk:3.1-bionic-arm64v8 /usr/share/powershell /tmp
-
 # add an argument that will later help designate the stocked sql server
 ARG PRIMARYSQL
 
@@ -22,7 +17,7 @@ USER root
 WORKDIR /tmp
 RUN chown mssql /tmp
 # use copy instead of add, it's safer apparently
-COPY sql scripts /tmp/
+COPY sql scripts bin /tmp/
 # put as much as possible on one line to reduce image size
 RUN chmod +x /tmp/*.sh
 
@@ -32,12 +27,15 @@ RUN if [ $PRIMARYSQL ]; then touch /tmp/primary; fi
 
 # switch to user mssql or the container will fail
 USER mssql
+
+RUN ls /tmp
 # run initial setup scripts then start the service for good
 RUN /bin/bash /tmp/initial-start.sh
 
 # Discard all that builder data then just copy the required changed files from "builder"
 FROM $IMAGE
 COPY --from=builder /var/opt/mssql /var/opt/mssql
+COPY bin /tmp/
 
 # label the container
 LABEL maintainer "Chrissy LeMaire <clemaire@dbatools.io>"

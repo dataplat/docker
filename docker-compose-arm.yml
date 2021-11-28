@@ -15,6 +15,7 @@ services:
     ports:
       - "1433:1433"
     env_file:
+      - sql/sqlcmd.env
       - sql/sapassword.env
     volumes:
       - shared:/shared:z

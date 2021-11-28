@@ -2,7 +2,7 @@
 # do this in a loop because the timing for when the SQL instance is ready is indeterminate
 for i in {1..50};
 do
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P dbatools.IO -d master -Q "SELECT @@VERSION"
+    sqlcmd -d master -Q "SELECT @@VERSION"
     if [ $? -eq 0 ]
     then
         echo "ready.."
@@ -14,20 +14,22 @@ do
 done
 
 # create sqladmin password and disable sa
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P dbatools.IO -d master -i /tmp/create-admin.sql
+sqlcmd -d master -i /tmp/create-admin.sql
+
+export SQLCMDUSER=sqladmin
 
 # rename the server
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_dropserver 'buildkitsandbox'"
+sqlcmd -d master -Q "EXEC sp_dropserver 'buildkitsandbox'"
 
 # if it's the primary server, restore pubs and northwind and create a bunch of objects
 if [ -f "/tmp/primary" ]; then
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'mssql1', local"
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /tmp/restore-db.sql
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /tmp/create-objects.sql
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /tmp/create-regserver.sql
+    sqlcmd -d master -Q "EXEC sp_addserver 'mssql1', local"
+    sqlcmd -d master -i /tmp/restore-db.sql
+    sqlcmd -d master -i /tmp/create-objects.sql
+    sqlcmd -d master -i /tmp/create-regserver.sql
 else
-    /opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -Q "EXEC sp_addserver 'mssql2', local"
+    sqlcmd -d master -Q "EXEC sp_addserver 'mssql2', local"
 fi
 
 # import the certificate and create endpoint 
-/opt/mssql-tools/bin/sqlcmd -S localhost -U sqladmin -P dbatools.IO -d master -i /tmp/create-endpoint.sql
+sqlcmd -d master -i /tmp/create-endpoint.sql

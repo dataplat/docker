@@ -61,3 +61,17 @@ https://github.com/microsoft/mssql-docker/issues/2
 https://github.com/microsoft/mssql-docker/tree/master/linux/preview/examples/mssql-customize
 
 https://stackoverflow.com/a/59485924/2610398
+
+wget https://github.com/microsoft/go-sqlcmd/archive/refs/heads/main.zip
+unzip main.zip
+pushd /tmp/go-sqlcmd-main
+/usr/local/go/bin/go build -o /tmp/sqlcmd ./cmd/sqlcmd
+popd
+/tmp/sqlcmd
+
+
+# grab powershell from the dotnet sdk container
+# there's no powershell tag yet for arm64
+# also how cool is this??
+COPY --from=golang:stretch /usr/local/go/ /usr/local/go/
+ENV PATH="/usr/local/go/bin:${PATH}"
