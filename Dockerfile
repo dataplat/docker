@@ -6,6 +6,11 @@ ARG IMAGE
 # then just keep the results
 FROM $IMAGE as builder
 
+# grab powershell from the dotnet sdk container
+# there's no powershell tag yet for arm64
+# also how cool is this??
+COPY --from=mcr.microsoft.com/dotnet/sdk:3.1-bionic-arm64v8 /usr/share/powershell /tmp
+
 # add an argument that will later help designate the stocked sql server
 ARG PRIMARYSQL
 

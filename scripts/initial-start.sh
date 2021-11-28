@@ -11,7 +11,7 @@ arch=$(lscpu | awk '/Architecture:/{print $2}')
 # then run the setup script
 
 if [ "$arch" = "aarch64" ]; then
-    /opt/mssql/bin/sqlservr & sleep 10 & /tmp/setup-arm.sh
+    /opt/mssql/bin/sqlservr & sleep 10 & /tmp/pwsh /tmp/setup-arm.ps1
  else
     /opt/mssql/bin/sqlservr & sleep 10 & /tmp/setup.sh
 fi

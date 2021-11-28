@@ -56,3 +56,8 @@ mssql-node-docker-demo-app](https://github.com/twright-msft/mssql-node-docker-de
 * [jessfraz/Dockerfiles](https://github.com/jessfraz/Dockerfiles)
 * [edemaine/kadira-compose](https://github.com/edemaine/kadira-compose)
 
+https://github.com/microsoft/go-sqlcmd/
+https://github.com/microsoft/mssql-docker/issues/2
+https://github.com/microsoft/mssql-docker/tree/master/linux/preview/examples/mssql-customize
+
+https://stackoverflow.com/a/59485924/2610398
