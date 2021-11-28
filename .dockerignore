@@ -2,17 +2,16 @@
 .cache
 .DS_Store
 .thumbsdb
-.git
+.git/
 .gitattributes
 .gitignore
 .env
-
-###  VisualStudioCode ###
 .vscode/
 
-###  Project ### 
+###  Project ###
 .dockerignore
-dockerfile
+Dockerfile
 LICENSE
 README.md
 *.ps1
+tests/

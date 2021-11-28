@@ -9,7 +9,7 @@ services:
     image: dbatools/sqlinstance:latest-arm64
     build:
       context: .
-      dockerfile: dockerfile
+      Dockerfile: Dockerfile
       args:
         PRIMARYSQL: "TRUE"
         IMAGE: "mcr.microsoft.com/azure-sql-edge"
@@ -28,7 +28,7 @@ services:
     image: dbatools/sqlinstance2:latest-arm64
     build:
       context: .
-      dockerfile: dockerfile
+      Dockerfile: Dockerfile
       args:
         IMAGE: "mcr.microsoft.com/azure-sql-edge"
     ports:

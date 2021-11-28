@@ -1,4 +1,4 @@
-# from image passed in dockerfile (either arm or x64)
+# from image passed in Dockerfile (either arm or x64)
 ARG IMAGE
 
 # get the latest SQL container and set it as the builder image
@@ -8,11 +8,6 @@ FROM $IMAGE as builder
 
 # add an argument that will later help designate the stocked sql server
 ARG PRIMARYSQL
-
-# label the container
-LABEL io.dbatools.version="1.0.0"
-LABEL io.dbatools.schema-version=1.0
-LABEL maintainer="clemaire@dbatools.io"
 
 # switch to root to a bunch of stuff that requires elevated privs
 USER root
@@ -38,6 +33,9 @@ RUN /bin/bash /tmp/initial-start.sh
 # Discard all that builder data then just copy the required changed files from "builder"
 FROM $IMAGE
 COPY --from=builder /var/opt/mssql /var/opt/mssql
+
+# label the container
+LABEL maintainer "Chrissy LeMaire <clemaire@dbatools.io>"
 
 # make a shared dir with the proper permissions
 USER root

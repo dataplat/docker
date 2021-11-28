@@ -41,7 +41,7 @@ Here are the highlights of things I learned in the past week:
 
 Some of the best resources I found included:
 
-* [Top 20 Dockerfile best practices (sysdig)](https://sysdig.com/blog/dockerfile-best-practices)
+* [Top 20 Dockerfile best practices (sysdig)](https://sysdig.com/blog/Dockerfile-best-practices)
 * [Multi-arch build and images, the simple way](https://www.docker.com/blog/multi-arch-build-and-images-the-simple-way/)
 
 Repos
@@ -51,6 +51,6 @@ SqlServerAndContainersGuide](https://github.com/dbafromthecold/SqlServerAndConta
 * [twright-msft
 /
 mssql-node-docker-demo-app](https://github.com/twright-msft/mssql-node-docker-demo-app)
-* [jessfraz/dockerfiles](https://github.com/jessfraz/dockerfiles)
+* [jessfraz/Dockerfiles](https://github.com/jessfraz/Dockerfiles)
 * [edemaine/kadira-compose](https://github.com/edemaine/kadira-compose)
 
