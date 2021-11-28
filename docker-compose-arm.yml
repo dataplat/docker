@@ -1,12 +1,14 @@
 version: '3.7'
 services:
-  dockersql1:
+  mssql1:
     restart: on-failure
-    container_name: dockersql1
-    hostname: dockersql1
+    networks:
+      - localnet
+    container_name: mssql1
+    hostname: mssql1
+    image: dbatools/sqlinstance:latest-arm64
     build:
       context: .
-      dockerfile: dockerfile
       args:
         PRIMARYSQL: "TRUE"
         IMAGE: "mcr.microsoft.com/azure-sql-edge"
@@ -14,16 +16,27 @@ services:
       - "1433:1433"
     env_file:
       - sql/sapassword.env
-  dockersql2:
+    volumes:
+      - shared:/shared:z
+  mssql2:
     restart: on-failure
-    container_name: dockersql2
-    hostname: dockersql2
+    networks:
+      - localnet
+    container_name: mssql2
+    hostname: mssql2
+    image: dbatools/sqlinstance2:latest-arm64
     build:
       context: .
-      dockerfile: dockerfile
       args:
         IMAGE: "mcr.microsoft.com/azure-sql-edge"
     ports:
       - "14333:1433"
     env_file:
       - sql/sapassword.env
+    volumes:
+      - shared:/shared:z
+
+networks:
+  localnet: null
+volumes:
+  shared: null
