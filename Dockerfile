@@ -28,7 +28,6 @@ RUN if [ $PRIMARYSQL ]; then touch /tmp/primary; fi
 # switch to user mssql or the container will fail
 USER mssql
 
-RUN ls /tmp
 # run initial setup scripts then start the service for good
 RUN /bin/bash /tmp/initial-start.sh
 
