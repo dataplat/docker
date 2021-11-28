@@ -35,6 +35,7 @@ Here are the highlights of things I learned in the past week:
 * Using COPY is safer than ADD, but ADD is used a lot in tutorials.
 * The last command in a Dockerfile should be an ENTRYPOINT and not a CMD. It makes it easier for end-user to interact in a way that I don't understand just yet.
 * `docker-compose` is out and `docker compose` is in
+* Environmental variables don't work *inside* the container, so you need to [import them]()
 * VOLUMEs are tricky and if you don't do them right, you can end up leaving a lot of garbage for your end-users.
 
 ![image](https://user-images.githubusercontent.com/8278033/143769486-78fdb5ce-34a0-4c2a-93bc-eb68addad725.png)
