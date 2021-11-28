@@ -6,7 +6,7 @@ Some commands, like docker push, require special permissions.
 # Clean up!
 This is super destructive as it will remove all images and containers and volumes. You probably don't want to run this.
 
-docker-compose down
+docker compose down
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 docker rmi $(docker images -q)
@@ -17,11 +17,11 @@ docker rmi $(docker images -q)
 #>
 # rebuild the whole thing with no caches
 
-docker-compose down --volumes
+docker compose down --volumes
 docker volume prune -f
 docker image prune -f
 docker builder prune -a -f
-docker-compose up --force-recreate --build --remove-orphans -d
+docker compose up --force-recreate --build --remove-orphans -d
     
 # push out to docker hub
 docker push dbatools/sqlinstance:latest-amd64
