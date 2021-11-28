@@ -5,6 +5,8 @@ ARG IMAGE
 # builder images let you do a bunch of work that you can discard
 # then just keep the results
 FROM $IMAGE as builder
+COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
+COPY --from=mcr.microsoft.com/powershell:7.2.0-arm32v7-ubuntu-bionic-20211116 /opt/microsoft/powershell /tmp
 
 # add an argument that will later help designate the stocked sql server
 ARG PRIMARYSQL
