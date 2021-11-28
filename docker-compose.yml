@@ -9,7 +9,6 @@ services:
     image: dbatools/sqlinstance:latest-amd64
     build:
       context: .
-      dockerfile: Dockerfile
       args:
         PRIMARYSQL: "TRUE"
         IMAGE: "mcr.microsoft.com/mssql/server:2019-latest"
@@ -28,7 +27,6 @@ services:
     image: dbatools/sqlinstance2:latest-amd64
     build:
       context: .
-      dockerfile: Dockerfile
       args:
         IMAGE: "mcr.microsoft.com/mssql/server:2019-latest"
     ports:
