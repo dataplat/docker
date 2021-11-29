@@ -44,8 +44,8 @@ LABEL org.opencontainers.image.url=https://dbatools.io/docker
 LABEL org.opencontainers.image.version=1.0
 LABEL org.label-schema.description="SQL Server instances with a sample objects, including Northwind and pubs. Ideal for test migrations."
 LABEL org.opencontainers.image.authors="Chrissy LeMaire <clemaire@dbatools.io>"
-LABEL org.opencontainers.image.documentation=https://github.com/potatoqualitee/dbatools-docker/blob/main/README.md
-LABEL org.opencontainers.image.source=https://github.com/potatoqualitee/dbatools-docker
+LABEL org.opencontainers.image.documentation=https://github.com/potatoqualitee/docker/blob/main/README.md
+LABEL org.opencontainers.image.source=https://github.com/potatoqualitee/docker
 
 # make a shared dir with the proper permissions
 USER root

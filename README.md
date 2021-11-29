@@ -82,3 +82,5 @@ https://nielscautaerts.xyz/making-dockerfiles-architecture-independent.html
 https://medium.com/swlh/using-github-actions-to-build-arm-based-docker-images-413a8d498ee
 
 https://ioactive.com/guest-blog-docker-hub-scanner-matias-sequeira/
+
+https://stackoverflow.com/questions/55667800/mac-docker-volume-mount-using-osxfs-not-working
