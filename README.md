@@ -77,3 +77,8 @@ popd
 # also how cool is this??
 COPY --from=golang:stretch /usr/local/go/ /usr/local/go/
 ENV PATH="/usr/local/go/bin:${PATH}"
+
+https://nielscautaerts.xyz/making-dockerfiles-architecture-independent.html
+https://medium.com/swlh/using-github-actions-to-build-arm-based-docker-images-413a8d498ee
+
+https://ioactive.com/guest-blog-docker-hub-scanner-matias-sequeira/
