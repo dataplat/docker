@@ -34,7 +34,7 @@ RUN /bin/bash /tmp/initial-start.sh
 # Discard all that builder data then just copy the required changed files from "builder"
 FROM $IMAGE
 COPY --from=builder /var/opt/mssql /var/opt/mssql
-COPY bin /tmp/
+COPY --from=builder /opt/mssql-tools/bin /opt/mssql-tools/bin
 
 # label the container
 LABEL maintainer "Chrissy LeMaire <clemaire@dbatools.io>"
