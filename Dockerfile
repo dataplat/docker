@@ -16,9 +16,9 @@ USER root
 # also create a shared directory and make it writable by mssql
 WORKDIR /tmp
 RUN chown mssql /tmp
+
 # use copy instead of add, it's safer apparently
 COPY sql scripts bin /tmp/
-# put as much as possible on one line to reduce image size
 RUN chmod +x /tmp/*.sh
 
 # write a file that designates the primary server
@@ -28,10 +28,10 @@ RUN if [ $PRIMARYSQL ]; then touch /tmp/primary; fi
 # switch to user mssql or the container will fail
 USER mssql
 
-# run initial setup scripts then start the service for good
-RUN /bin/bash /tmp/initial-start.sh
+# run initial setup scripts
+RUN /bin/bash /tmp/start-sql.sh
 
-# Discard all that builder data then just copy the required changed files from "builder"
+# discard all that builder data then just copy the required changed files from "builder"
 FROM $IMAGE
 COPY --from=builder /var/opt/mssql /var/opt/mssql
 COPY --from=builder /opt/mssql-tools/bin /opt/mssql-tools/bin
