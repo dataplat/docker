@@ -1,4 +1,4 @@
-# dbatools-docker
+# docker
 
 What an adventure! Seven days ago, I decided to build [our Docker images](https://hub.docker.com/orgs/dbatools/repositories) the proper way, using `docker compose` or `docker build`. 
 
@@ -77,6 +77,10 @@ popd
 # also how cool is this??
 COPY --from=golang:stretch /usr/local/go/ /usr/local/go/
 ENV PATH="/usr/local/go/bin:${PATH}"
+
+
+COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
+COPY --from=mcr.microsoft.com/powershell:7.2.0-arm32v7-ubuntu-bionic-20211116 /opt/microsoft/powershell /tmp
 
 https://nielscautaerts.xyz/making-dockerfiles-architecture-independent.html
 https://medium.com/swlh/using-github-actions-to-build-arm-based-docker-images-413a8d498ee
