@@ -8,4 +8,4 @@ cp /tmp/mssql.conf /var/opt/mssql/mssql.conf
 
 # startup, wait for it to finish starting
 # then run the setup script
-/opt/mssql/bin/sqlservr & sleep 15 & /tmp/configure.sh
+/opt/mssql/bin/sqlservr & sleep 20 & /tmp/configure.sh
