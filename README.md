@@ -79,7 +79,7 @@ SqlServerAndContainersGuide](https://github.com/dbafromthecold/SqlServerAndConta
 mssql-node-docker-demo-app](https://github.com/twright-msft/mssql-node-docker-demo-app)
 * [jessfraz/Dockerfiles](https://github.com/jessfraz/Dockerfiles)
 * [edemaine/kadira-compose](https://github.com/edemaine/kadira-compose)
-* [vicrem/mssql](https://github.com/vicrem/mssql/blob/master/docker compose.yml)
+* [vicrem/mssql](https://github.com/vicrem/mssql/blob/master/docker-compose.yml)
 * [microsoft/go-sqlcmd](https://github.com/microsoft/go-sqlcmd/)
 * [microsoft/mssql-docker](https://github.com/microsoft/mssql-docker/tree/master/linux/preview/examples/mssql-customize)
 
