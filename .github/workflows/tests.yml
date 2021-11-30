@@ -33,4 +33,6 @@ jobs:
           modules-to-cache: dbatools
 
       - name: Run tests
-        run: $null = Invoke-Pester ./tests/actions.ps1 -Output Detailed -PassThru
+        run: |
+          $null = Invoke-Pester ./tests/actions.ps1 -Output Detailed -PassThru
+          Get-DbatoolsError -All
