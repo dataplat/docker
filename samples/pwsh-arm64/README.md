@@ -1,6 +1,8 @@
 
 # run pwsh in an arm64 container
 
+PowerShell does not yet have an arm64 tag for `mcr.microsoft.com/powershell`. To use PowerShell on your Apple M1 or Raspberry Pi, you can build this project.
+
 The included Dockerfile:
 
 * grabs a minimal dotnet container as the base
