@@ -4,7 +4,8 @@ ARG IMAGE
 # get the latest SQL container and set it as the builder image builder images
 # let you do a bunch of work that you can discard then just keep the results
 # specify the platform bc https://github.com/docker/buildx/issues/395#issuecomment-758466888
-FROM --platform=$BUILDPLATFORM $IMAGE as builder
+#FROM --platform=$BUILDPLATFORM $IMAGE as builder
+FROM $IMAGE as builder
 
 # add an argument that will later help designate the stocked sql server
 ARG PRIMARYSQL
