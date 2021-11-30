@@ -1,7 +1,9 @@
 # from image passed in Dockerfile (either arm or x64)
 ARG IMAGE
 
-# get it from the base image that matches your architecture
+# ARM doesn't yet support sqlcmd, so we need to build it
+# start with the golang base image which will be discarded
+# later in the build process
 FROM golang as sqlcmdbuilder
 
 # clone the go-sqlcmd repo
@@ -10,11 +12,11 @@ RUN git clone --depth 1 https://github.com/microsoft/go-sqlcmd
 # change directories and compile sqlcmd to /tmp/sqlcmd
 RUN cd go-sqlcmd && go build -o /tmp/sqlcmd ./cmd/sqlcmd
 
-# get the latest SQL container and set it as the builder image builder images
-# let you do a bunch of work that you can discard then just keep the results
-# specify the platform bc https://github.com/docker/buildx/issues/395#issuecomment-758466888
-#FROM --platform=$BUILDPLATFORM $IMAGE as builder
+# Moving on...
+# get the latest SQL container and set it as the builder image
 FROM $IMAGE as builder
+
+# copy sqlcmd from the golang builder image
 COPY --from=sqlcmdbuilder /tmp /tmp
 
 # add an argument that will later help designate the stocked sql server
