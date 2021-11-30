@@ -1,56 +1,36 @@
-name: Run docker build
-on:
-  workflow_dispatch:
+name: Build and test
+on: [push]
 defaults:
   run:
     shell: pwsh
 jobs:
-  linuxtest:
+  tests:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: 👥 Clone appveyor repo
-        working-directory: /tmp
-        run: |
-          gh repo clone sqlcollaborative/dbatools
+      - name: Build docker image
+        run: docker compose -f ./sqlinstance/docker-compose.yml up --force-recreate --build --remove-orphans -d
 
-      - name: Run tests
-        run: $null = Invoke-Pester ./tests/actions.ps1 -Output Detailed -PassThru
+      - name: Bring em back down
+        run: docker compose down --volumes
 
-      - name: Setup docker images
+      - name: Fire em up
         run: |
           # create a shared network
           docker network create localnet
-          # Expose engine and endpoint then setup a shared path for migrations
-          docker run -p 1433:1433  --volume shared:/shared:z --name mssql1 --hostname mssql1 --network localnet -d dbatools/sqlinstance
-          # Expose second engine and endpoint on different port
-          docker run -p 14333:1433 --volume shared:/shared:z --name mssql2 --hostname mssql2 --network localnet -d dbatools/sqlinstance2
 
-  mactest:
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          # Expose engine then setup a shared path for migrations
+          docker run -p 1433:1433 --volume shared:/shared:z --hostname mssql1 --name mssql1 --network localnet -d dbatools/sqlinstance:latest-amd64
 
-    steps:
-      - uses: actions/checkout@v2
+          # Expose second engine on different port and use the same shared path
+          docker run -p 14333:1433 --volume shared:/shared:z --hostname mssql2 --name mssql2 --network localnet -d dbatools/sqlinstance2:latest-amd64
 
-      - name: 👥 Clone appveyor repo
-        working-directory: /tmp
-        run: |
-          gh repo clone sqlcollaborative/dbatools
+      - name: Install and cache dbatools
+        uses: potatoqualitee/psmodulecache@v4
+        with:
+          modules-to-cache: dbatools
 
       - name: Run tests
         run: $null = Invoke-Pester ./tests/actions.ps1 -Output Detailed -PassThru
-
-      - name: Setup docker images
-        run: |
-          # create a shared network
-          docker network create localnet
-          # Expose engine and endpoint then setup a shared path for migrations
-          docker run -p 1433:1433  --volume shared:/shared:z --name mssql1 --hostname mssql1 --network localnet -d dbatools/sqlinstance
-          # Expose second engine and endpoint on different port
-          docker run -p 14333:1433 --volume shared:/shared:z --name mssql2 --hostname mssql2 --network localnet -d dbatools/sqlinstance2
