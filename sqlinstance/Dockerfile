@@ -22,6 +22,9 @@ RUN chown mssql /tmp
 COPY sql scripts bin /tmp/
 RUN chmod +x /tmp/*.sh
 
+# convert CRLF to LF in case Windows or VS Code changed it
+RUN find . -type f \( -name "*.sql" -o -name "*.env" -o -name "*.sh" \) -exec sed -i 's/\r$//' {} \;
+
 # write a file that designates the primary server
 # this is used in a later step to load up the server
 RUN if [ $PRIMARYSQL ]; then touch /tmp/primary; fi
