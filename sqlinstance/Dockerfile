@@ -1,9 +1,8 @@
 # from image passed in Dockerfile (either arm or x64)
 ARG IMAGE
 
-# get the latest SQL container and set it as the builder image
-# builder images let you do a bunch of work that you can discard
-# then just keep the results
+# get the latest SQL container and set it as the builder image builder images
+# let you do a bunch of work that you can discard then just keep the results
 # specify the platform bc https://github.com/docker/buildx/issues/395#issuecomment-758466888
 FROM --platform=$BUILDPLATFORM $IMAGE as builder
 
