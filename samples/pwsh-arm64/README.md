@@ -1,35 +1,22 @@
 
-# compile sqlcmd using go
+# run pwsh in an arm64 container
 
 The included Dockerfile:
 
-* runs the golang base image that matches your architecture
-* clones the microsoft/go-sqlcmd repo
-* compiles sqlcmd to /tmp/sqlcmd
+* grabs a minimal dotnet container as the base
+* copies just pwsh from the larger sdk image
 
-A similar method was used to compile `sqlcmd` which is not included in SQL Server Edge ARM64 container, as SQL client tools are not available for ARM.
-
-## get started
-
-Here's how you make it run and copy the resulting sqlcmd file
+Here's how to get started:
 
 ```
 # clone this repo
 git clone --depth 1 https://github.com/sqlcollaborative/docker
-cd docker/samples/compile-go-sqlcmd
+cd docker/samples/pwsh-arm64
 
 # build the container
-docker build -t tempcontainer --no-cache .
+docker build -t pwsh --no-cache .
 
 # run it interactively to look around
-docker run -it tempcontainer
-
-# run it non-interactively
-docker run -d --name tempcontainer tempcontainer
-
-# copy a file
-docker cp tempcontainer:/tmp/sqlcmd .
-
-# stop and remove your container
-docker rm -f tempcontainer
+# remove the container once you're done
+docker run -it pwsh -rm
 ```
