@@ -7,6 +7,10 @@ The included Dockerfile:
 * clones the microsoft/go-sqlcmd repo
 * compiles sqlcmd to /tmp/sqlcmd
 
+A similar method was used to compile `sqlcmd` which is not included in SQL Server Edge ARM64 container, as SQL client tools are not available for ARM.
+
+## get started
+
 Here's how you make it run and copy the resulting sqlcmd file
 
 ```
