@@ -19,6 +19,8 @@ sqlcmd -d master -Q "EXEC sp_dropserver 'buildkitsandbox'"
 # if it's the primary server, restore pubs and northwind and create a bunch of objects
 if [ -f "/tmp/primary" ]; then
     sqlcmd -S localhost -d master -Q "EXEC sp_addserver 'mssql1', local"
+    wget https://github.com/sqlcollaborative/docker/raw/a61d8e1ffb150cae767c27737ad07e730d4e76dd/sqlinstance/sql/northwind.bak
+    wget https://github.com/sqlcollaborative/docker/raw/a61d8e1ffb150cae767c27737ad07e730d4e76dd/sqlinstance/sql/pubs.bak
     sqlcmd -S localhost -d master -i /tmp/restore-db.sql
     sqlcmd -S localhost -d master -i /tmp/create-objects.sql
     sqlcmd -S localhost -d master -i /tmp/create-regserver.sql
