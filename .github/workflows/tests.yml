@@ -10,13 +10,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build docker image
+      - name: Build docker images
         run: docker compose -f ./sqlinstance/docker-compose.yml up --force-recreate --build --remove-orphans -d
 
-      - name: Bring em back down
+      - name: Stop newly built containers and remove volumes
         run: docker compose -f ./sqlinstance/docker-compose.yml down --volumes
 
-      - name: Fire em up
+      - name: Recreate the scenario from dbatools.io/docker
         run: |
           # create a shared network
           docker network create localnet
@@ -32,7 +32,7 @@ jobs:
         with:
           modules-to-cache: dbatools
 
-      - name: Run tests
+      - name: Test that commands continue to work with new build
         run: |
           $null = Invoke-Pester ./tests/actions.ps1 -Output Detailed -PassThru
           Get-DbatoolsError -All
