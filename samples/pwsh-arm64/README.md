@@ -14,7 +14,7 @@ git clone --depth 1 https://github.com/sqlcollaborative/docker
 cd docker/samples/pwsh-arm64
 
 # build the container
-docker build -t pwsh --no-cache .
+docker build -t pwsh .
 
 # run it interactively to look around
 # remove the container once you're done

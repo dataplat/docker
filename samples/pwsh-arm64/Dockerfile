@@ -1,8 +1,13 @@
-# Make the base image the smaller 200MB image
-FROM mcr.microsoft.com/dotnet/nightly/runtime:3.1-bionic-arm64v8
+# use the sdk image to build
+FROM mcr.microsoft.com/dotnet/sdk as builder
 
-# Copy just what you need from the big SDK image
-COPY --from=mcr.microsoft.com/dotnet/sdk:3.1-bionic-arm64v8 /usr/share/powershell /bin
+# install the latest version of PowerShell
+RUN dotnet tool install -g PowerShell
+
+# discard all that builder data then just copy the required changed files from "builder"
+# Make the base image the smaller 200MB image
+FROM mcr.microsoft.com/dotnet/runtime
+COPY --from=builder /root/.dotnet/tools /bin
 
 # run powershell
 ENTRYPOINT pwsh
