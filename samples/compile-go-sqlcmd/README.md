@@ -10,6 +10,10 @@ The included Dockerfile:
 Here's how you make it run and copy the resulting sqlcmd file
 
 ```
+# clone this repo
+git clone --depth 1 https://github.com/sqlcollaborative/docker
+cd docker/samples/compile-go-sqlcmd
+
 # build the container
 docker build -t tempcontainer --no-cache .
 
