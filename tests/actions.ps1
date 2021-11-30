@@ -21,7 +21,7 @@ Describe "Integration Tests" -Tag "IntegrationTests" {
         }
         (New-DbaAvailabilityGroup @params).AvailabilityDatabases.Name | Should -Be "pubs"
     }
-    
+
     It "sets up a mirror" {
         # Test mirroring
         $newdb = New-DbaDatabase -SqlInstance localhost -SqlCredential $cred
@@ -38,6 +38,6 @@ Describe "Integration Tests" -Tag "IntegrationTests" {
         }
 
         Invoke-DbaDbMirroring @params | Select-Object -ExpandProperty Status | Should -Be "Success"
-        Get-DbaDbMirror | Select-Object -ExpandProperty MirroringPartner | Should -Be "TCP://mssql2:5022"
+        Get-DbaDbMirror -SqlInstance localhost -SqlCredential $cred | Select-Object -ExpandProperty MirroringPartner | Should -Be "TCP://mssql2:5022"
     }
 }
