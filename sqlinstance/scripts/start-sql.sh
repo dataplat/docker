@@ -11,6 +11,7 @@ arch=$(lscpu | awk '/Architecture:/{print $2}')
 if [ "$arch" = "aarch64" ]; then
     mkdir /opt/mssql-tools /opt/mssql-tools/bin
     cp /tmp/sqlcmd /opt/mssql-tools/bin
+    chmod +x /opt/mssql-tools/bin/sqlcmd
 fi
 
 # startup, wait for it to finish starting
