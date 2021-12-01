@@ -29,11 +29,11 @@ RUN cd go-sqlcmd && go build -o /tmp/sqlcmd ./cmd/sqlcmd
 #
 ###
 
-# designate the stocked sql server
-ARG PRIMARYSQL
-
 # get the latest SQL container and set it as the builder image
 FROM $IMAGE as builder
+
+# designate the stocked sql server
+ARG PRIMARYSQL
 
 # copy sqlcmd from the golang builder image above
 COPY --from=sqlcmdbuilder /tmp /tmp
