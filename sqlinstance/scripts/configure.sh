@@ -14,7 +14,7 @@ sqlcmd -S localhost -d master -i /tmp/create-admin.sql
 export SQLCMDUSER=sqladmin
 
 # prep to rename the server to be mssql1 or mssql2
-sqlcmd -d master -Q "EXEC sp_dropserver 'buildkitsandbox'"
+sqlcmd -d master -Q "EXEC sp_dropserver @@SERVERNAME"
 
 # if it's the primary server, restore pubs and northwind and create a bunch of objects
 if [ -f "/tmp/primary" ]; then
