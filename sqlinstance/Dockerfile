@@ -1,32 +1,59 @@
-# from image passed in Dockerfile (either arm or x64)
+###
+#
+#   Specify parameters
+#
+###
+
+# which image to use (either arm or x64)
 ARG IMAGE
 
-# get the latest SQL container and set it as the builder image builder images
-# let you do a bunch of work that you can discard then just keep the results
-# specify the platform bc https://github.com/docker/buildx/issues/395#issuecomment-758466888
-#FROM --platform=$BUILDPLATFORM $IMAGE as builder
+###
+#
+#   first temp/builder image: build go-sqlcmd for ARM since
+#   it's currently not included in the SQL Edge image
+#
+###
+
+# start with the golang base image which will be discarded
+FROM golang as sqlcmdbuilder
+
+# clone the go-sqlcmd repo
+RUN git clone --depth 1 https://github.com/microsoft/go-sqlcmd
+
+# change directories and compile sqlcmd to /tmp/sqlcmd
+RUN cd go-sqlcmd && go build -o /tmp/sqlcmd ./cmd/sqlcmd
+
+###
+#
+#   second temp/builder image: add users, logins, databases, etc
+#
+###
+
+# get the latest SQL container and set it as the builder image
 FROM $IMAGE as builder
 
-# add an argument that will later help designate the stocked sql server
+# designate the stocked sql server
 ARG PRIMARYSQL
+
+# copy sqlcmd from the golang builder image above
+COPY --from=sqlcmdbuilder /tmp /tmp
 
 # switch to root to a bunch of stuff that requires elevated privs
 USER root
 
-# copy scripts and make bash files executable
-# also create a shared directory and make it writable by mssql
+# set the pwd and chown to the service account
 WORKDIR /tmp
 RUN chown mssql /tmp
 
+# copy scripts and make bash files executable
 # use copy instead of add, it's safer apparently
-COPY sql scripts bin /tmp/
+COPY sql scripts /tmp/
 RUN chmod +x /tmp/*.sh
 
 # convert CRLF to LF in case Windows or VS Code changed it
 RUN find . -type f \( -name "*.sql" -o -name "*.env" -o -name "*.sh" \) -exec sed -i 's/\r$//' {} \;
 
 # write a file that designates the primary server
-# this is used in a later step to load up the server
 RUN if [ $PRIMARYSQL ]; then touch /tmp/primary; fi
 
 # switch to user mssql or the container will fail
@@ -35,7 +62,15 @@ USER mssql
 # run initial setup scripts
 RUN /bin/bash /tmp/start-sql.sh
 
-# discard all that builder data then just copy the required changed files from "builder"
+###
+#
+#   final image: grab the good stuff, label
+#   the image, and startup the sql instance
+#
+###
+
+# copy the required changed files from "builder"
+# and use it to start from scratch
 FROM $IMAGE
 COPY --from=builder /var/opt/mssql /var/opt/mssql
 COPY --from=builder /opt/mssql-tools/bin /opt/mssql-tools/bin

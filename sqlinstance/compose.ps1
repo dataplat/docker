@@ -49,7 +49,7 @@ docker compose down --volumes
 docker volume prune -f
 docker image prune -f
 docker builder prune -a -f
-docker compose -f ./docker compose-arm.yml up --force-recreate --build --remove-orphans -d
+docker compose -f ./docker-compose-arm.yml up --force-recreate --build --remove-orphans -d
 
 # push out to docker hub
 docker push dbatools/sqlinstance:latest-arm64
