@@ -6,8 +6,6 @@
 
 # which image to use (either arm or x64)
 ARG IMAGE
-# designate the stocked sql server
-ARG PRIMARYSQL
 
 ###
 #
@@ -30,6 +28,9 @@ RUN cd go-sqlcmd && go build -o /tmp/sqlcmd ./cmd/sqlcmd
 #   second temp/builder image: add users, logins, databases, etc
 #
 ###
+
+# designate the stocked sql server
+ARG PRIMARYSQL
 
 # get the latest SQL container and set it as the builder image
 FROM $IMAGE as builder
