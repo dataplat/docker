@@ -31,7 +31,7 @@ jobs:
         with:
           context: "./sqlinstance/arch/arm64"
           platforms: linux/arm64
-          push: false
+          push: true
           tags: |
             dbatools/mssqlbase
 
@@ -40,6 +40,6 @@ jobs:
         with:
           context: "./sqlinstance/arch/amd64"
           platforms: linux/amd64
-          push: false
+          push: true
           tags: |
             dbatools/mssqlbase
