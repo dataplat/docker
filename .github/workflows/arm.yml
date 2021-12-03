@@ -48,3 +48,6 @@ jobs:
         run: |
           docker manifest create dbatools/mssqlbase:latest --amend dbatools/mssqlbase:latest-amd64 --amend dbatools/mssqlbase:latest-arm64
           docker manifest push docker.io/dbatools/mssqlbase:latest --purge
+
+      - name: View manifest
+        run: docker manifest inspect docker.io/dbatools/mssqlbase:latest
