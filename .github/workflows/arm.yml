@@ -1,6 +1,4 @@
-# currently just for reference
-# https://nielscautaerts.xyz/making-dockerfiles-architecture-independent.html
-name: Deploy images to Docker
+name: Deploy mssqlbase images to Docker
 on:
   workflow_dispatch:
 
@@ -26,12 +24,22 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      # https://github.com/docker/build-push-action#multi-platform-image
+      # Can't be all in one step bc it uses
+      # two entirely different images
+      - name: Build ARM64 and push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: "./sqlinstance/arch/arm64"
+          platforms: linux/arm64
+          push: false
+          tags: |
+            dbatools/mssqlbase
+
       - name: Build AMD64 and push to Docker Hub
         uses: docker/build-push-action@v2
         with:
-          context: "./sqlinstance"
-          platforms: linux/amd64, linux/arm64
+          context: "./sqlinstance/arch/amd64"
+          platforms: linux/amd64
           push: false
           tags: |
-            dbatools/sqlinstance
+            dbatools/mssqlbase
