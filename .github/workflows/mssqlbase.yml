@@ -44,6 +44,8 @@ jobs:
           push: true
           tags: dbatools/mssqlbase:latest-amd64
 
+      # because it's two builds, the manifest has
+      # to be created and pushed manually
       - name: Create and push manifest
         run: |
           docker manifest create dbatools/mssqlbase:latest --amend dbatools/mssqlbase:latest-amd64 --amend dbatools/mssqlbase:latest-arm64

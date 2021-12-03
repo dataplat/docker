@@ -16,17 +16,9 @@ cd docker\sqlinstance
 docker-compose up -d
 ```
 
-This will pull the SQL Server images from Microsoft's repo, then add a bunch of test objects (databases, logins, jobs, etc)  using bash and sql files in this repo, and then make them available for you to connect to on the default port 1433 for the first instance and port 14333 for the second instance.
+This will pull the SQL Server images from Microsoft's repo, then add a bunch of test objects (databases, logins, jobs, etc) using bash and sql files in this repo, and then make them available for you to connect to on the default port 1433 for the first instance and port 14333 for the second instance.
 
-If you're using ARM architecture (Apple M1 or Raspberry Pi), you'll need to use the [docker-compose-arm.yml](https://github.com/potatoqualitee/docker/blob/main/sqlinstance/docker-compose-arm.yml) file instead.
-
-```shell
-git clone https://www.github.com/potatoqualitee/docker
-cd docker/sqlinstance
-docker-compose -f docker-compose-arm.yml up -d
-```
-
-This is because ARM uses the SQL Server Edge image from Microsoft, while the original build uses SQL Server 2019.
+Note:  If you're using ARM architecture (Apple M1 or Raspberry Pi), none of the High Availability commands will work, as ARM is only supported by SQL Edge, which is limited.
 
 ## Time to play 🎉
 
@@ -40,6 +32,7 @@ Note that dbatools supports both using commas and colons to designate a port. Wh
 $cred = Get-Credential sqladmin
 Connect-DbaInstance -SqlInstance localhost, localhost:14333 -SqlCredential $cred
 ```
+If you'd like to test more commands, check out [dbatools and docker (updated!)](https://dbatools.io/docker)
 
 To stop the containers, run the following command in the docker\sqlinstance directory:
 
@@ -71,12 +64,8 @@ Some of the best resources I found included:
 * [Multi-arch build and images, the simple way](https://www.docker.com/blog/multi-arch-build-and-images-the-simple-way/)
 
 Repos
-* [dbafromthecold
-/
-SqlServerAndContainersGuide](https://github.com/dbafromthecold/SqlServerAndContainersGuide/tree/master/Code/6.DockerCompose/Advanced)
-* [twright-msft
-/
-mssql-node-docker-demo-app](https://github.com/twright-msft/mssql-node-docker-demo-app)
+* [dbafromthecold/SqlServerAndContainersGuide](https://github.com/dbafromthecold/SqlServerAndContainersGuide/tree/master/Code/6.DockerCompose/Advanced)
+* [twright-msft/mssql-node-docker-demo-app](https://github.com/twright-msft/mssql-node-docker-demo-app)
 * [jessfraz/Dockerfiles](https://github.com/jessfraz/Dockerfiles)
 * [edemaine/kadira-compose](https://github.com/edemaine/kadira-compose)
 * [vicrem/mssql](https://github.com/vicrem/mssql/blob/master/docker-compose.yml)
