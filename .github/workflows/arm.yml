@@ -1,6 +1,8 @@
 name: Deploy mssqlbase images to Docker
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   buildandpush:
@@ -29,20 +31,18 @@ jobs:
       - name: Build ARM64 and push to Docker Hub
         uses: docker/build-push-action@v2
         with:
-          context: "./sqlinstance/arch/arm64"
+          context: ./sqlinstance/arch/arm64
           platforms: linux/arm64
           push: true
-          tags: |
-            dbatools/mssqlbase:latest-arm64
+          tags: dbatools/mssqlbase:latest-arm64
 
       - name: Build AMD64 and push to Docker Hub
         uses: docker/build-push-action@v2
         with:
-          context: "./sqlinstance/arch/amd64"
+          context: ./sqlinstance/arch/amd64
           platforms: linux/amd64
           push: true
-          tags: |
-            dbatools/mssqlbase:latest-amd64
+          tags: dbatools/mssqlbase:latest-amd64
 
       - name: Create and push manifest
         run: |
