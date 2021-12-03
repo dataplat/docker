@@ -11,7 +11,6 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v2
 
-      # https://github.com/docker/login-action#docker-hub
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -39,7 +38,7 @@ jobs:
           docker manifest create dbatools/sqlinstance:latest --amend dbatools/sqlinstance:latest-amd64 --amend dbatools/sqlinstance:latest-arm64
           docker manifest create dbatools/sqlinstance2:latest --amend dbatools/sqlinstance2:latest-amd64 --amend dbatools/sqlinstance2:latest-arm64
 
-      - name: View manifest
+      - name: Push manifest
         run: |
           #docker manifest push docker.io/dbatools/sqlinstance:latest --purge
           #docker manifest push docker.io/dbatools/sqlinstance2:latest --purge
