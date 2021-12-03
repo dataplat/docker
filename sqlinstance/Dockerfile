@@ -9,23 +9,7 @@ ARG IMAGE
 
 ###
 #
-#   first temp/builder image: build go-sqlcmd for ARM since
-#   it's currently not included in the SQL Edge image
-#
-###
-
-# start with the golang base image which will be discarded
-FROM golang as sqlcmdbuilder
-
-# clone the go-sqlcmd repo
-RUN git clone --depth 1 https://github.com/microsoft/go-sqlcmd
-
-# change directories and compile sqlcmd to /tmp/sqlcmd
-RUN cd go-sqlcmd && go build -o /tmp/sqlcmd ./cmd/sqlcmd
-
-###
-#
-#   second temp/builder image: add users, logins, databases, etc
+#   temp/builder image: add users, logins, databases, etc
 #
 ###
 
@@ -34,9 +18,6 @@ FROM $IMAGE as builder
 
 # designate the stocked sql server
 ARG PRIMARYSQL
-
-# copy sqlcmd from the golang builder image above
-COPY --from=sqlcmdbuilder /tmp /tmp
 
 # switch to root to a bunch of stuff that requires elevated privs
 USER root
