@@ -34,7 +34,7 @@ EXEC msdb.dbo.sysmail_configure_sp @parameter_name=N'ProhibitedExtensions', @par
 GO
 
 EXEC msdb.dbo.sysmail_add_account_sp @account_name=N'The DBA Team', 
-		@email_address=N'administrator@ad.local', 
+		@email_address=N'dbadistro@ad.local', 
 		@display_name=N'The DBA Team'
 GO
 
@@ -47,7 +47,7 @@ GO
 EXEC msdb.dbo.sysmail_add_principalprofile_sp @principal_name=N'guest', @profile_name=N'The DBA Team', @is_default=1
 GO
 
-EXEC msdb.dbo.sysmail_update_account_sp @account_name=N'The DBA Team', @description=N'', @email_address=N'administrator@ad.local', @display_name=N'The DBA Team', @replyto_address=N'', @mailserver_name=N'smtp.ad.local', @mailserver_type=N'SMTP', @port=25, @username=N'', @password=N'', @use_default_credentials=0, @enable_ssl=0
+EXEC msdb.dbo.sysmail_update_account_sp @account_name=N'The DBA Team', @description=N'', @email_address=N'dbadistro@ad.local', @display_name=N'The DBA Team', @replyto_address=N'', @mailserver_name=N'smtp.ad.local', @mailserver_type=N'SMTP', @port=25, @username=N'', @password=N'', @use_default_credentials=0, @enable_ssl=0
 GO
 
 -- extended events
@@ -542,7 +542,7 @@ EXEC msdb.dbo.sp_add_operator @name=N'MSXOperator',
 		@sunday_pager_start_time=90000, 
 		@sunday_pager_end_time=180000, 
 		@pager_days=0, 
-		@email_address=N'administrator@ad.local', 
+		@email_address=N'dbadistro@ad.local', 
 		@category_name=N'[Uncategorized]'
 GO
 
@@ -555,7 +555,7 @@ EXEC msdb.dbo.sp_add_operator @name=N'The DBA Team',
 		@sunday_pager_start_time=90000, 
 		@sunday_pager_end_time=180000, 
 		@pager_days=0, 
-		@email_address=N'administrator@ad.local', 
+		@email_address=N'dbadistro@ad.local', 
 		@category_name=N'[Uncategorized]'
 GO
 
@@ -1480,7 +1480,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Output F
 		@retry_attempts=0, 
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'CmdExec', 
-		@command=N'cmd'
+		@command=N'cmd',
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
