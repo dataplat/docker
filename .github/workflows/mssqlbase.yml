@@ -1,6 +1,7 @@
 name: Deploy mssqlbase
 on:
   workflow_dispatch:
+  # run each night
   schedule:
     - cron: "0 0 * * *"
 
