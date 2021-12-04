@@ -29,8 +29,8 @@ jobs:
 
       - name: Push images
         run: |
-          #docker push dbatools/sqlinstance:latest-amd64
-          #docker push dbatools/sqlinstance2:latest-amd64
+          docker push dbatools/sqlinstance:latest-amd64
+          docker push dbatools/sqlinstance2:latest-amd64
 
       # push one multiarch image
       - name: Create and push multiarch manifest
@@ -40,8 +40,8 @@ jobs:
 
       - name: Push manifest
         run: |
-          #docker manifest push docker.io/dbatools/sqlinstance:latest --purge
-          #docker manifest push docker.io/dbatools/sqlinstance2:latest --purge
+          docker manifest push docker.io/dbatools/sqlinstance:latest --purge
+          docker manifest push docker.io/dbatools/sqlinstance2:latest --purge
 
       - name: View manifest
         run: |
