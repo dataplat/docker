@@ -1530,8 +1530,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'sp_delet
 		@command=N'DECLARE @CleanupDate datetime
 SET @CleanupDate = DATEADD(dd,-30,GETDATE())
 EXECUTE dbo.sp_delete_backuphistory @oldest_date = @CleanupDate', 
-		@database_name=N'msdb', 
-		@output_file_name=N'$(ESCAPE_SQUOTE(SQLLOGDIR))\sp_delete_backuphistory_$(ESCAPE_SQUOTE(JOBID))_$(ESCAPE_SQUOTE(STEPID))_$(ESCAPE_SQUOTE(STRTDT))_$(ESCAPE_SQUOTE(STRTTM)).txt', 
+		@database_name=N'msdb',
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
@@ -1581,8 +1580,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'sp_purge
 		@command=N'DECLARE @CleanupDate datetime
 SET @CleanupDate = DATEADD(dd,-30,GETDATE())
 EXECUTE dbo.sp_purge_jobhistory @oldest_date = @CleanupDate', 
-		@database_name=N'msdb', 
-		@output_file_name=N'$(ESCAPE_SQUOTE(SQLLOGDIR))\sp_purge_jobhistory_$(ESCAPE_SQUOTE(JOBID))_$(ESCAPE_SQUOTE(STEPID))_$(ESCAPE_SQUOTE(STRTDT))_$(ESCAPE_SQUOTE(STRTTM)).txt', 
+		@database_name=N'msdb',
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
