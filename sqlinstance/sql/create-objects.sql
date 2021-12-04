@@ -1,7 +1,7 @@
 -- create a boatload of things to migrate
 
 -- backup device
-EXEC master.dbo.sp_addumpdevice  @devtype = N'disk', @logicalname = N'Old School', @physicalname = N'\\sqlbackups\sql\Old School.bak'
+EXEC master.dbo.sp_addumpdevice  @devtype = N'disk', @logicalname = N'Old School', @physicalname = N'\\nas\sqlbackups\Old School.bak'
 GO
 
 -- custom errors
@@ -33,10 +33,6 @@ GO
 EXEC msdb.dbo.sysmail_configure_sp @parameter_name=N'ProhibitedExtensions', @parameter_value=N'exe,dll,vbs,js', @description=N'Extensions not allowed in outgoing mails'
 GO
 
-/*
-	Created by workstationx\ctrlb using dbatools Export-DbaScript for objects on mssql1 at 11/18/2021 16:45:24
-	See https://dbatools.io/Export-DbaScript for more information
-*/
 EXEC msdb.dbo.sysmail_add_account_sp @account_name=N'The DBA Team', 
 		@email_address=N'administrator@ad.local', 
 		@display_name=N'The DBA Team'
@@ -56,10 +52,6 @@ GO
 
 -- extended events
 
-/*
-	Created by workstationx\ctrlb using dbatools Export-DbaXESession for objects on mssql1 at 2021-11-18 16:45:46.007
-	See https://dbatools.io/Export-DbaXESession for more information
-*/
 CREATE EVENT SESSION [AlwaysOn_health_new] ON SERVER 
 ADD EVENT sqlserver.alwayson_ddl_executed,
 ADD EVENT sqlserver.availability_group_lease_expired,
@@ -301,7 +293,7 @@ GO
 USE master
 
 GO
-IF NOT EXISTS (SELECT loginname FROM master.dbo.syslogins WHERE name = 'testlogin') CREATE LOGIN [testlogin] WITH PASSWORD = 0x02002E0CB89BE6A3118A65BE3B9BA53C98854361125B5722FAC66E9E32A6A996537E6E3556BCC09C4D0807650FD6753AA61881DAEE0C4AE962856EA17E0DDF2DFABBFC65BC34 HASHED, SID = 0x7612E56A4CAB2C468A7D24736564C6F7, DEFAULT_DATABASE = [master], CHECK_POLICY = OFF, CHECK_EXPIRATION = OFF, DEFAULT_LANGUAGE = [Fran�ais]
+IF NOT EXISTS (SELECT loginname FROM master.dbo.syslogins WHERE name = 'testlogin') CREATE LOGIN [testlogin] WITH PASSWORD = 0x02002E0CB89BE6A3118A65BE3B9BA53C98854361125B5722FAC66E9E32A6A996537E6E3556BCC09C4D0807650FD6753AA61881DAEE0C4AE962856EA17E0DDF2DFABBFC65BC34 HASHED, SID = 0x7612E56A4CAB2C468A7D24736564C6F7, DEFAULT_DATABASE = [master], CHECK_POLICY = OFF, CHECK_EXPIRATION = OFF, DEFAULT_LANGUAGE = [Dansk]
 GO
 
 USE master
@@ -371,7 +363,7 @@ GO
 -- policy management
 
 Declare @condition_id int
-EXEC msdb.dbo.sp_syspolicy_add_condition @name=N'aaa', @description=N'', @facet=N'ApplicationRole', @expression=N'<Operator>
+EXEC msdb.dbo.sp_syspolicy_add_condition @name=N'AppRoles', @description=N'', @facet=N'ApplicationRole', @expression=N'<Operator>
 				  <TypeClass>Bool</TypeClass>
 				  <OpType>EQ</OpType>
 				  <Count>2</Count>
@@ -408,7 +400,7 @@ EXEC msdb.dbo.sp_syspolicy_add_target_set_level @target_set_id=@target_set_id, @
 GO
 
 Declare @policy_id int
-EXEC msdb.dbo.sp_syspolicy_add_policy @name=N'xp_cmdshell must be disabled', @condition_name=N'aaa', @policy_category=N'', @description=N'', @help_text=N'', @help_link=N'', @schedule_uid=N'00000000-0000-0000-0000-000000000000', @execution_mode=2, @is_enabled=True, @policy_id=@policy_id OUTPUT, @root_condition_name=N'', @object_set=N'xp_cmdshell must be disabled_ObjectSet'
+EXEC msdb.dbo.sp_syspolicy_add_policy @name=N'xp_cmdshell must be disabled', @condition_name=N'AppRoles', @policy_category=N'', @description=N'', @help_text=N'', @help_link=N'', @schedule_uid=N'00000000-0000-0000-0000-000000000000', @execution_mode=2, @is_enabled=True, @policy_id=@policy_id OUTPUT, @root_condition_name=N'', @object_set=N'xp_cmdshell must be disabled_ObjectSet'
 Select @policy_id
  
 GO
@@ -541,86 +533,6 @@ EXEC sp_configure 'allow polybase export' , 0;
 
 -- tons of agent stuff
 
-/*
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'MULTI-SERVER', @name=N'[Uncategorized (Multi-Server)]'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'AdminJobs'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Data Collector'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Database Engine Tuning Advisor'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Database Maintenance'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'DB Helth Monitoring'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Event Cleanup'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Full-Text'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Jobs from MSX'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Log Shipping'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'REPL-Alert Response'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'REPL-Checkup'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'REPL-Distribution'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'REPL-Distribution Cleanup'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'REPL-History Cleanup'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'REPL-LogReader'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'REPL-Merge'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'REPL-QueueReader'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'REPL-Snapshot'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'REPL-Subscription Cleanup'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Stats Rollup'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Topn past day'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Topn past month'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Topn past week'
-GO
-
-EXEC msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'Topn past year'
-GO
-
-*/
 EXEC msdb.dbo.sp_add_operator @name=N'MSXOperator', 
 		@enabled=1, 
 		@weekday_pager_start_time=90000, 
@@ -630,7 +542,7 @@ EXEC msdb.dbo.sp_add_operator @name=N'MSXOperator',
 		@sunday_pager_start_time=90000, 
 		@sunday_pager_end_time=180000, 
 		@pager_days=0, 
-		@email_address=N'clemaire@gmail.com', 
+		@email_address=N'administrator@ad.local', 
 		@category_name=N'[Uncategorized]'
 GO
 
@@ -647,10 +559,6 @@ EXEC msdb.dbo.sp_add_operator @name=N'The DBA Team',
 		@category_name=N'[Uncategorized]'
 GO
 
-/*
-	Created by workstationx\ctrlb using dbatools Export-DbaScript for objects on mssql1 at 11/18/2021 16:45:48
-	See https://dbatools.io/Export-DbaScript for more information
-*/
 EXEC msdb.dbo.sp_add_alert @name=N'Error Number 823', 
 		@message_id=823, 
 		@severity=0, 
@@ -911,11 +819,7 @@ EXEC msdb.dbo.sp_add_alert @name=N'Severity 025',
 		@job_id=N'00000000-0000-0000-0000-000000000000'
 GO
 
-/*
-	Created by workstationx\ctrlb using dbatools Export-DbaScript for objects on mssql1 at 11/18/2021 16:45:49
-	See https://dbatools.io/Export-DbaScript for more information
-*/
-EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_10min', 
+EXEC msdb.dbo.sp_add_schedule @schedule_name=N'New_CollectorSchedule_Every_10min', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
@@ -930,7 +834,7 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_10min',
 		@schedule_uid=N'7a263d89-1223-48a1-a9f5-7b63e8c4f336'
 GO
 
-EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_10min', 
+EXEC msdb.dbo.sp_add_schedule @schedule_name=N'New_CollectorSchedule_Every_10min', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
@@ -945,7 +849,7 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_10min',
 		@schedule_uid=N'41a6d121-6b6c-4899-98de-acf704d14f5d'
 GO
 
-EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_15min', 
+EXEC msdb.dbo.sp_add_schedule @schedule_name=N'New_CollectorSchedule_Every_15min', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
@@ -960,7 +864,7 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_15min',
 		@schedule_uid=N'0772cf28-c787-435e-a5ed-dda1a86df02d'
 GO
 
-EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_15min', 
+EXEC msdb.dbo.sp_add_schedule @schedule_name=N'New_CollectorSchedule_Every_15min', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
@@ -975,7 +879,7 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_15min',
 		@schedule_uid=N'0a6139ff-a28c-48d1-8dca-47e24a87f5eb'
 GO
 
-EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_30min', 
+EXEC msdb.dbo.sp_add_schedule @schedule_name=N'New_CollectorSchedule_Every_30min', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
@@ -990,7 +894,7 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_30min',
 		@schedule_uid=N'6da2a147-9c77-4146-9932-c640ec187d01'
 GO
 
-EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_30min', 
+EXEC msdb.dbo.sp_add_schedule @schedule_name=N'New_CollectorSchedule_Every_30min', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
@@ -1005,7 +909,7 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_30min',
 		@schedule_uid=N'c40e90de-5ecc-4b89-9df8-424dd6160a0a'
 GO
 
-EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_5min', 
+EXEC msdb.dbo.sp_add_schedule @schedule_name=N'New_CollectorSchedule_Every_5min', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
@@ -1020,7 +924,7 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_5min',
 		@schedule_uid=N'a575ffd0-98a0-4d0e-b43c-b63482fb5b00'
 GO
 
-EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_5min', 
+EXEC msdb.dbo.sp_add_schedule @schedule_name=N'New_CollectorSchedule_Every_5min', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
@@ -1035,7 +939,7 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_5min',
 		@schedule_uid=N'e9d74ad4-c27d-4d6c-8c17-439572742a97'
 GO
 
-EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_60min', 
+EXEC msdb.dbo.sp_add_schedule @schedule_name=N'New_CollectorSchedule_Every_60min', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
@@ -1050,7 +954,7 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_60min',
 		@schedule_uid=N'fd8ac6c3-1b03-4781-8e63-e4b2fa680995'
 GO
 
-EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_60min', 
+EXEC msdb.dbo.sp_add_schedule @schedule_name=N'New_CollectorSchedule_Every_60min', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
@@ -1065,7 +969,7 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_60min',
 		@schedule_uid=N'89b3db93-fe2a-4ae7-bc88-fa0bcca45f29'
 GO
 
-EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_6h', 
+EXEC msdb.dbo.sp_add_schedule @schedule_name=N'New_CollectorSchedule_Every_6h', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
@@ -1080,7 +984,7 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_6h',
 		@schedule_uid=N'66aa8120-b988-433d-a766-0d05ba17831c'
 GO
 
-EXEC msdb.dbo.sp_add_schedule @schedule_name=N'CollectorSchedule_Every_6h', 
+EXEC msdb.dbo.sp_add_schedule @schedule_name=N'New_CollectorSchedule_Every_6h', 
 		@enabled=1, 
 		@freq_type=4, 
 		@freq_interval=1, 
@@ -1125,10 +1029,6 @@ EXEC msdb.dbo.sp_add_schedule @schedule_name=N'RunAsSQLAgentServiceStartSchedule
 		@schedule_uid=N'3f66a6ae-280d-4aff-9691-c9028d272b27'
 GO
 
-/*
-	Created by workstationx\ctrlb using dbatools Export-DbaScript for objects on mssql1 at 11/18/2021 16:45:50
-	See https://dbatools.io/Export-DbaScript for more information
-*/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
@@ -1163,8 +1063,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'CommandL
 		@os_run_priority=0, @subsystem=N'TSQL', 
 		@command=N'DELETE FROM [dbo].[CommandLog]
 WHERE StartTime < DATEADD(dd,-30,GETDATE())', 
-		@database_name=N'master', 
-		@output_file_name=N'$(ESCAPE_SQUOTE(SQLLOGDIR))\CommandLogCleanup_$(ESCAPE_SQUOTE(JOBID))_$(ESCAPE_SQUOTE(STEPID))_$(ESCAPE_SQUOTE(STRTDT))_$(ESCAPE_SQUOTE(STRTTM)).txt', 
+		@database_name=N'master',
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
@@ -1213,14 +1112,13 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Database
 		@os_run_priority=0, @subsystem=N'TSQL', 
 		@command=N'EXECUTE [dbo].[DatabaseBackup]
 @Databases = ''SYSTEM_DATABASES'',
-@Directory = N''\\sqlbackups\sql'',
+@Directory = N''\\nas\sqlbackups'',
 @BackupType = ''FULL'',
 @Verify = ''Y'',
 @CleanupTime = NULL,
 @CheckSum = ''Y'',
 @LogToTable = ''N''', 
-		@database_name=N'master', 
-		@output_file_name=N'$(ESCAPE_SQUOTE(SQLLOGDIR))\DatabaseBackup_FULL_$(ESCAPE_SQUOTE(JOBID))_$(ESCAPE_SQUOTE(STEPID))_$(ESCAPE_SQUOTE(STRTDT))_$(ESCAPE_SQUOTE(STRTTM)).txt', 
+		@database_name=N'master',
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
@@ -1269,14 +1167,13 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Database
 		@os_run_priority=0, @subsystem=N'TSQL', 
 		@command=N'EXECUTE [dbo].[DatabaseBackup]
 @Databases = ''USER_DATABASES'',
-@Directory = N''\\sqlbackups\sql'',
+@Directory = N''\\nas\sqlbackups'',
 @BackupType = ''DIFF'',
 @Verify = ''Y'',
 @CleanupTime = NULL,
 @CheckSum = ''Y'',
 @LogToTable = ''N''', 
-		@database_name=N'master', 
-		@output_file_name=N'$(ESCAPE_SQUOTE(SQLLOGDIR))\DatabaseBackup_DIFF_$(ESCAPE_SQUOTE(JOBID))_$(ESCAPE_SQUOTE(STEPID))_$(ESCAPE_SQUOTE(STRTDT))_$(ESCAPE_SQUOTE(STRTTM)).txt', 
+		@database_name=N'master',
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
@@ -1325,14 +1222,13 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Database
 		@os_run_priority=0, @subsystem=N'TSQL', 
 		@command=N'EXECUTE [dbo].[DatabaseBackup]
 @Databases = ''USER_DATABASES'',
-@Directory = N''\\sqlbackups\sql'',
+@Directory = N''\\nas\sqlbackups'',
 @BackupType = ''FULL'',
 @Verify = ''Y'',
 @CleanupTime = NULL,
 @CheckSum = ''Y'',
 @LogToTable = ''N''', 
-		@database_name=N'master', 
-		@output_file_name=N'$(ESCAPE_SQUOTE(SQLLOGDIR))\DatabaseBackup_FULL_$(ESCAPE_SQUOTE(JOBID))_$(ESCAPE_SQUOTE(STEPID))_$(ESCAPE_SQUOTE(STRTDT))_$(ESCAPE_SQUOTE(STRTTM)).txt', 
+		@database_name=N'master',
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
@@ -1381,14 +1277,13 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Database
 		@os_run_priority=0, @subsystem=N'TSQL', 
 		@command=N'EXECUTE [dbo].[DatabaseBackup]
 @Databases = ''USER_DATABASES'',
-@Directory = N''\\sqlbackups\sql'',
+@Directory = N''\\nas\sqlbackups'',
 @BackupType = ''LOG'',
 @Verify = ''Y'',
 @CleanupTime = NULL,
 @CheckSum = ''Y'',
 @LogToTable = ''N''', 
-		@database_name=N'master', 
-		@output_file_name=N'$(ESCAPE_SQUOTE(SQLLOGDIR))\DatabaseBackup_LOG_$(ESCAPE_SQUOTE(JOBID))_$(ESCAPE_SQUOTE(STEPID))_$(ESCAPE_SQUOTE(STRTDT))_$(ESCAPE_SQUOTE(STRTTM)).txt', 
+		@database_name=N'master',
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
@@ -1438,8 +1333,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Database
 		@command=N'EXECUTE [dbo].[DatabaseIntegrityCheck]
 @Databases = ''SYSTEM_DATABASES'',
 @LogToTable = ''N''', 
-		@database_name=N'master', 
-		@output_file_name=N'$(ESCAPE_SQUOTE(SQLLOGDIR))\DatabaseIntegrityCheck_$(ESCAPE_SQUOTE(JOBID))_$(ESCAPE_SQUOTE(STEPID))_$(ESCAPE_SQUOTE(STRTDT))_$(ESCAPE_SQUOTE(STRTTM)).txt', 
+		@database_name=N'master',
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
@@ -1489,8 +1383,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Database
 		@command=N'EXECUTE [dbo].[DatabaseIntegrityCheck]
 @Databases = ''USER_DATABASES'',
 @LogToTable = ''N''', 
-		@database_name=N'master', 
-		@output_file_name=N'$(ESCAPE_SQUOTE(SQLLOGDIR))\DatabaseIntegrityCheck_$(ESCAPE_SQUOTE(JOBID))_$(ESCAPE_SQUOTE(STEPID))_$(ESCAPE_SQUOTE(STRTDT))_$(ESCAPE_SQUOTE(STRTTM)).txt', 
+		@database_name=N'master',
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
@@ -1540,8 +1433,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'IndexOpt
 		@command=N'EXECUTE [dbo].[IndexOptimize]
 @Databases = ''USER_DATABASES'',
 @LogToTable = ''N''', 
-		@database_name=N'master', 
-		@output_file_name=N'$(ESCAPE_SQUOTE(SQLLOGDIR))\IndexOptimize_$(ESCAPE_SQUOTE(JOBID))_$(ESCAPE_SQUOTE(STEPID))_$(ESCAPE_SQUOTE(STRTDT))_$(ESCAPE_SQUOTE(STRTTM)).txt', 
+		@database_name=N'master',
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
@@ -1588,8 +1480,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'Output F
 		@retry_attempts=0, 
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'CmdExec', 
-		@command=N'cmd /q /c "For /F "tokens=1 delims=" %v In (''ForFiles /P "$(ESCAPE_SQUOTE(SQLLOGDIR))" /m *_*_*_*.txt /d -30 2^>^&1'') do if EXIST "$(ESCAPE_SQUOTE(SQLLOGDIR))"\%v echo del "$(ESCAPE_SQUOTE(SQLLOGDIR))"\%v& del "$(ESCAPE_SQUOTE(SQLLOGDIR))"\%v"', 
-		@output_file_name=N'$(ESCAPE_SQUOTE(SQLLOGDIR))\OutputFileCleanup_$(ESCAPE_SQUOTE(JOBID))_$(ESCAPE_SQUOTE(STEPID))_$(ESCAPE_SQUOTE(STRTDT))_$(ESCAPE_SQUOTE(STRTTM)).txt', 
+		@command=N'cmd'
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1
