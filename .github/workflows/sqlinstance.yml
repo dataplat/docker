@@ -1,4 +1,4 @@
-name: Deploy sqlinstance:latest-amd64 images to Docker
+name: Deploy sqlinstance:latest
 on:
   workflow_dispatch:
   push:

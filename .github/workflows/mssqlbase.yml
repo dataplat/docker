@@ -1,4 +1,4 @@
-name: Deploy mssqlbase images to Docker
+name: Deploy mssqlbase
 on:
   workflow_dispatch:
   schedule:
