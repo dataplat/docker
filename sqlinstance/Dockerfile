@@ -1,20 +1,11 @@
 ###
 #
-#   Specify parameters
-#
-###
-
-# which image to use (either arm or x64)
-ARG IMAGE
-
-###
-#
 #   temp/builder image: add users, logins, databases, etc
 #
 ###
 
 # get the latest SQL container and set it as the builder image
-FROM $IMAGE as builder
+FROM dbatools/mssqlbase as builder
 
 # designate the stocked sql server
 ARG PRIMARYSQL
@@ -52,9 +43,17 @@ RUN /bin/bash /tmp/start-sql.sh
 
 # copy the required changed files from "builder"
 # and use it to start from scratch
-FROM $IMAGE
+FROM dbatools/mssqlbase
 COPY --from=builder /var/opt/mssql /var/opt/mssql
 COPY --from=builder /opt/mssql-tools/bin /opt/mssql-tools/bin
+
+# make a shared dir with the proper permissions
+USER root
+RUN  mkdir /shared; chown mssql /shared
+
+# run a rootless container
+USER mssql
+ENTRYPOINT /opt/mssql/bin/sqlservr
 
 # label the container
 LABEL org.opencontainers.image.vendor="dbatools"
@@ -65,11 +64,3 @@ LABEL org.label-schema.description="SQL Server instances with a sample objects, 
 LABEL org.opencontainers.image.authors="Chrissy LeMaire <clemaire@dbatools.io>"
 LABEL org.opencontainers.image.documentation=https://github.com/potatoqualitee/docker/blob/main/README.md
 LABEL org.opencontainers.image.source=https://github.com/potatoqualitee/docker
-
-# make a shared dir with the proper permissions
-USER root
-RUN  mkdir /shared; chown mssql /shared
-
-# run a rootless container
-USER mssql
-ENTRYPOINT /opt/mssql/bin/sqlservr

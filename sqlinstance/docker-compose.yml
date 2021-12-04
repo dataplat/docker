@@ -6,7 +6,7 @@ services:
       - localnet
     container_name: mssql1
     hostname: mssql1
-    image: dbatools/sqlinstance:latest-amd64
+    image: dbatools/sqlinstance
     build:
       context: .
       labels:
@@ -15,7 +15,6 @@ services:
           dbatools/sqlinstance"
       args:
         PRIMARYSQL: "TRUE"
-        IMAGE: "mcr.microsoft.com/mssql/server:2019-latest"
     ports:
       - "1433:1433"
     env_file:
@@ -28,15 +27,13 @@ services:
       - localnet
     container_name: mssql2
     hostname: mssql2
-    image: dbatools/sqlinstance2:latest-amd64
+    image: dbatools/sqlinstance2
     build:
       context: .
       labels:
         org.label-schema.docker.cmd: "docker run -p 14333:1433 --volume shared:/shared:z
           --name mssql2 --hostname mssql2 --network localnet -d
           dbatools/sqlinstance2"
-      args:
-        IMAGE: "mcr.microsoft.com/mssql/server:2019-latest"
     ports:
       - "14333:1433"
     env_file:
