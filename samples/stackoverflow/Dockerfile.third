@@ -7,26 +7,23 @@
 # get the latest SQL container and set it as the builder image
 FROM dbatools/mssqlbase as builder
 
-# designate the stocked sql server
-ARG PRIMARYSQL
-
 # switch to root to a bunch of stuff that requires elevated privs
 USER root
 
 # set the pwd and chown to the service account
 WORKDIR /tmp
+RUN apt-get -y update \
+    && apt-get install -y p7zip\
+    p7zip-full
 RUN chown mssql /tmp
 
 # copy scripts and make bash files executable
 # use copy instead of add, it's safer apparently
-COPY sql scripts /tmp/
+COPY sql third /tmp/
 RUN chmod +x /tmp/*.sh
 
 # convert CRLF to LF in case Windows or VS Code changed it
 RUN find . -type f \( -name "*.sql" -o -name "*.env" -o -name "*.sh" \) -exec sed -i 's/\r$//' {} \;
-
-# write a file that designates the primary server
-RUN if [ $PRIMARYSQL ]; then touch /tmp/primary; fi
 
 # switch to user mssql or the container will fail
 USER mssql
@@ -49,12 +46,13 @@ COPY --from=builder /opt/mssql-tools/bin /opt/mssql-tools/bin
 
 # make a shared dir with the proper permissions
 USER root
-RUN  mkdir /shared; chown mssql /shared
+RUN mkdir /shared; chown mssql /shared
+RUN chown -R mssql /opt/
 
 # run a rootless container
 USER mssql
 ENTRYPOINT /opt/mssql/bin/sqlservr
-# CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
+#CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
 
 # label the container
 LABEL org.opencontainers.image.vendor="dbatools"
