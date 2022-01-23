@@ -1,6 +1,6 @@
 # StackOverflow
 
-This Docker compose has three instances -- the first two are the dbatools instances and the third one is a non-customized version of 2019 with a 10 GB StackOverflow database.
+This Docker compose has three instances -- the first two are the dbatools instances and the third one is a barebones version of 2019 with a 10 GB StackOverflow database.
 
 ## Get started
 
