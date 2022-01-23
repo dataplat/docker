@@ -13,3 +13,7 @@ docker-compose up -d
 ```
 
 The first time this runs it'll take like 10 minutes, but each subsequent time will be faster.
+
+## Logging in
+
+All three instances can be logged into by using the `sqladmin` as the username and `dbatools.IO` as the password.
