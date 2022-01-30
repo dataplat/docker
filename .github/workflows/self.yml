@@ -4,7 +4,7 @@ on:
     branches:
       - self
 jobs:
-  tests:
+  test:
     runs-on: self-hosted
 
     steps:
