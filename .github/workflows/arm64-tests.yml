@@ -28,7 +28,7 @@ jobs:
 
       - name: Test that commands continue to work with new build
         run: |
-          $null = Import-Module dbatools, Pester
+          $null = Import-Module dbatools, Pester -ErrorAction SilentlyContinue
           $null = Invoke-Pester ./tests/actions-arm64.ps1 -Output Detailed -PassThru
           Get-DbatoolsError -All
 
