@@ -31,3 +31,12 @@ jobs:
           $null = Import-Module dbatools, Pester
           $null = Invoke-Pester ./tests/actions-arm64.ps1 -Output Detailed -PassThru
           Get-DbatoolsError -All
+
+      - name: Cleanup runner
+        if: always()
+        run: |
+          docker kill $(docker ps -q)
+          docker rm $(docker ps -a -q)
+          docker system prune -a -f
+          docker volume prune -f
+          docker builder prune -a -f
