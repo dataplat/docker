@@ -15,3 +15,10 @@ jobs:
 
       - name: Stop newly built containers and remove volumes
         run: docker compose -f ./sqlinstance/docker-compose.yml down --volumes
+
+      - name: Cleanup runner
+        run: |
+          mv /Users/runneradmin/Documents/gha-runner-osx-arm64/_layout/_work/* /Users/runneradmin/Documents/garbage
+          docker volume prune -f
+          docker image prune -f
+          docker builder prune -a -f
