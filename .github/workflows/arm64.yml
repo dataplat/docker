@@ -1,10 +1,8 @@
 name: Run self-hosted
 on:
-  push:
-    branches:
-      - self
+  workflow_dispatch:
 jobs:
-  test:
+  arm64buildandpush:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
@@ -53,7 +51,6 @@ jobs:
 
       - name: Cleanup runner
         run: |
-          docker system prune -f
+          docker system prune -a -f
           docker volume prune -f
-          docker image prune -f
           docker builder prune -a -f
