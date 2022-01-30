@@ -1,0 +1,37 @@
+name: Build and test
+on:
+  workflow_dispatch:
+defaults:
+  run:
+    shell: pwsh
+jobs:
+  tests:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build docker images
+        run: docker compose -f ./sqlinstance/docker-compose.yml up --force-recreate --build --remove-orphans -d
+
+      - name: Stop newly built containers and remove volumes
+        run: docker compose -f ./sqlinstance/docker-compose.yml down --volumes
+
+      - name: Recreate the scenario from dbatools.io/docker
+        run: |
+          # create a shared network
+          docker network create localnet
+          # Expose engine then setup a shared path for migrations
+          docker run -p 1433:1433 --volume shared:/shared:z --hostname mssql1 --name mssql1 --network localnet -d dbatools/sqlinstance
+          # Expose second engine on different port and use the same shared path
+          docker run -p 14333:1433 --volume shared:/shared:z --hostname mssql2 --name mssql2 --network localnet -d dbatools/sqlinstance2
+
+      - name: Install and cache dbatools
+        uses: potatoqualitee/psmodulecache@v4
+        with:
+          modules-to-cache: dbatools, Pester
+
+      - name: Test that commands continue to work with new build
+        run: |
+          $null = Invoke-Pester ./tests/actions.ps1 -Output Detailed -PassThru
+          Get-DbatoolsError -All
