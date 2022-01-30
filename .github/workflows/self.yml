@@ -18,6 +18,7 @@ jobs:
 
       - name: Cleanup runner
         run: |
+          docker system prune -f
           docker volume prune -f
-          # docker image prune -f
+          docker image prune -f
           docker builder prune -a -f
