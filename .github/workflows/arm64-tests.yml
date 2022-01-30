@@ -26,12 +26,8 @@ jobs:
           # Expose second engine on different port and use the same shared path
           docker run -p 14333:1433 --volume shared:/shared:z --hostname mssql2 --name mssql2 --network localnet -d dbatools/sqlinstance2
 
-      - name: Install and cache dbatools
-        uses: potatoqualitee/psmodulecache@v4
-        with:
-          modules-to-cache: dbatools, Pester
-
       - name: Test that commands continue to work with new build
         run: |
+          $null = Import-Module dbatools, Pester
           $null = Invoke-Pester ./tests/actions-arm64.ps1 -Output Detailed -PassThru
           Get-DbatoolsError -All
