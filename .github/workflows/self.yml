@@ -18,10 +18,6 @@ jobs:
 
       - name: Cleanup runner
         run: |
-          tar -czvf /Users/runneradmin/Documents/actions.tgz /Users/runneradmin/Documents/gha-runner-osx-arm64/_layout/_work/_actions
-          rm -rf /Users/runneradmin/Documents/gha-runner-osx-arm64/_layout/_work
-          tar -xvzf /Users/runneradmin/Documents/actions.tgz -C /
-          rm -rf /Users/runneradmin/Documents/actions.tgz
           docker volume prune -f
           docker image prune -f
           docker builder prune -a -f
