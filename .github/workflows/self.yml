@@ -18,8 +18,10 @@ jobs:
 
       - name: Cleanup runner
         run: |
-          rm -rf /Users/runneradmin/Documents/gha-runner-osx-arm64/_layout/_work
+          mv /Users/runneradmin/Documents/gha-runner-osx-arm64/_layout/_work/_actions /Users/runneradmin/Documents/gha-runner-osx-arm64/_layout/
+          rm -rf /Users/runneradmin/Documents/gha-runner-osx-arm64/_layout/_work 
           mkdir /Users/runneradmin/Documents/gha-runner-osx-arm64/_layout/_work
+          mv /Users/runneradmin/Documents/gha-runner-osx-arm64/_layout/_work/_actions /Users/runneradmin/Documents/gha-runner-osx-arm64/_layout/_work/
           docker volume prune -f
           docker image prune -f
           docker builder prune -a -f
