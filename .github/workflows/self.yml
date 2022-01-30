@@ -1,0 +1,17 @@
+name: Test self-hosted
+on:
+  push:
+    branches:
+      - self
+jobs:
+  tests:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build docker images
+        run: docker compose -f ./sqlinstance/docker-compose.yml up --force-recreate --build --remove-orphans -d
+
+      - name: Stop newly built containers and remove volumes
+        run: docker compose -f ./sqlinstance/docker-compose.yml down --volumes
