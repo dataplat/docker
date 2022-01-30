@@ -33,5 +33,5 @@ jobs:
 
       - name: Test that commands continue to work with new build
         run: |
-          $null = Invoke-Pester ./tests/actions.ps1 -Output Detailed -PassThru
+          $null = Invoke-Pester ./tests/actions-arm64.ps1 -Output Detailed -PassThru
           Get-DbatoolsError -All
