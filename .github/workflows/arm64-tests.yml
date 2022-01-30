@@ -5,7 +5,7 @@ defaults:
   run:
     shell: pwsh
 jobs:
-  tests:
+  arm64tests:
     runs-on: self-hosted
 
     steps:
