@@ -1,4 +1,4 @@
-name: Run self-hosted
+name: Run self-hosted on arm64
 on:
   workflow_dispatch:
 jobs:

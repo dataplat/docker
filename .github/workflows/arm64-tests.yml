@@ -1,4 +1,4 @@
-name: Build and test
+name: Build and test arm64
 on:
   workflow_dispatch:
 defaults:
