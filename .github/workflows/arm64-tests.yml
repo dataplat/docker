@@ -28,6 +28,8 @@ jobs:
 
       - name: Recreate the scenario from dbatools.io/docker
         run: |
+          # delete old network just in case
+          docker network prune -f
           # create a shared network
           docker network create localnet
           # Expose engine then setup a shared path for migrations
