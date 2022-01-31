@@ -28,6 +28,9 @@ jobs:
 
       - name: Recreate the scenario from dbatools.io/docker
         run: |
+          # try again wth
+          docker kill $(docker ps -q)
+          docker rm -f $(docker ps -a -q)
           # delete old network just in case
           docker network prune -f
           # create a shared network
