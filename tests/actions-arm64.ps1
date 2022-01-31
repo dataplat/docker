@@ -6,7 +6,7 @@ Describe "Integration Tests" -Tag "IntegrationTests" {
         $PSDefaultParameterValues["*:Confirm"] = $false
     }
 
-    It "creates an availability group" {
+    It "creates migrates from one instance to another" {
         $params = @{
             Source                   = "localhost"
             SourceSqlCredential      = $cred
