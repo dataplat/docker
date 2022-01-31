@@ -8,17 +8,18 @@ Describe "Integration Tests" -Tag "IntegrationTests" {
 
     It "creates an availability group" {
         $params = @{
-            Primary                = "localhost"
-            PrimarySqlCredential   = $cred
-            Secondary              = "localhost:14333"
-            SecondarySqlCredential = $cred
-            Name                   = "test-ag"
-            Database               = "pubs"
-            ClusterType            = "None"
-            SeedingMode            = "Automatic"
-            FailoverMode           = "Manual"
-            Confirm                = $false
+            Source                   = "localhost"
+            SourceSqlCredential      = $cred
+            Destination              = "localhost:14333"
+            DestinationSqlCredential = $cred
+            BackupRestore            = $true
+            SharedPath               = "/shared"
+            Exclude                  = "LinkedServers", "Credentials", "BackupDevices", "ExtendedEvents"
+            Force                    = $true
         }
-        (New-DbaAvailabilityGroup @params).AvailabilityDatabases.Name | Should -Be "pubs"
+
+        $results = Start-DbaMigration @params
+        $results.Name | Should -Contain "Northwind"
+        $results | Where-Object Name -eq "Northwind" | Select-Object -ExpandProperty Status | Should -Be "Successful"
     }
 }
