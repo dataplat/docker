@@ -8,6 +8,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Test that dbatools imports
+        shell: pwsh
+        run: $null = Import-Module dbatools, Pester
+
       - name: Build docker images
         run: docker compose -f ./sqlinstance/docker-compose.yml up --force-recreate --build --remove-orphans -d
 
@@ -35,6 +39,6 @@ jobs:
         run: |
           docker kill $(docker ps -q)
           docker rm $(docker ps -a -q)
-          docker system prune -a -f
+          #docker system prune -a -f
           docker volume prune -f
           docker builder prune -a -f
