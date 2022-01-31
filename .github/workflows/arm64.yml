@@ -1,4 +1,4 @@
-name: Run self-hosted
+name: Run self-hosted on arm64
 on:
   workflow_dispatch:
 jobs:
@@ -50,7 +50,10 @@ jobs:
           docker compose down --volumes
 
       - name: Cleanup runner
+        if: always()
         run: |
+          docker kill $(docker ps -q)
+          docker rm $(docker ps -a -q)
           docker system prune -a -f
           docker volume prune -f
           docker builder prune -a -f
