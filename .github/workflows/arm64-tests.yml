@@ -48,7 +48,9 @@ jobs:
         if: always()
         run: |
           docker kill $(docker ps -q)
-          docker rm $(docker ps -a -q)
+          docker rm -f $(docker ps -a -q)
+          docker image prune -f
           #docker system prune -a -f
           docker volume prune -f
           docker builder prune -a -f
+          docker network prune -f
