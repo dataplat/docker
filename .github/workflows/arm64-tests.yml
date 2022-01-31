@@ -26,36 +26,19 @@ jobs:
           # Expose second engine on different port and use the same shared path
           docker run -p 14333:1433 --volume shared:/shared:z --hostname mssql2 --name mssql2 --network localnet -d dbatools/sqlinstance2
 
-      - name: Recreate the scenario from dbatools.io/docker
-        run: |
-          # try again wth
-          docker kill $(docker ps -q)
-          docker rm -f $(docker ps -a -q)
-          # delete old network just in case
-          docker network prune -f
-          # create a shared network
-          docker network create localnet
-          # Expose engine then setup a shared path for migrations
-          docker run -p 1433:1433 --volume shared:/shared:z --hostname mssql1 --name mssql1 --network localnet -d dbatools/sqlinstance
-          # Expose second engine on different port and use the same shared path
-          docker run -p 14333:1433 --volume shared:/shared:z --hostname mssql2 --name mssql2 --network localnet -d dbatools/sqlinstance2
-
       - name: Sleep while SQL Server starts
         run: Start-Sleep 10
 
       - name: Test that commands continue to work with new build
         run: |
-          $null = Import-Module dbatools, Pester
           $null = Invoke-Pester ./tests/actions-arm64.ps1 -Output Detailed -PassThru
-          Get-DbatoolsError -All
 
       - name: Cleanup runner
         if: always()
         run: |
           docker kill $(docker ps -q)
           docker rm -f $(docker ps -a -q)
-          docker image prune -f
-          #docker system prune -a -f
+          docker rmi $(docker images -q "dbatools\/sql*")
           docker volume prune -f
           docker builder prune -a -f
           docker network prune -f
