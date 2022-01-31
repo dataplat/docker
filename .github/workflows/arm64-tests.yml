@@ -1,9 +1,6 @@
 name: Build and test arm64
 on:
   workflow_dispatch:
-defaults:
-  run:
-    shell: pwsh
 jobs:
   arm64tests:
     runs-on: self-hosted
@@ -27,8 +24,9 @@ jobs:
           docker run -p 14333:1433 --volume shared:/shared:z --hostname mssql2 --name mssql2 --network localnet -d dbatools/sqlinstance2
 
       - name: Test that commands continue to work with new build
+        shell: pwsh
         run: |
-          $null = Import-Module dbatools, Pester -ErrorAction SilentlyContinue
+          $null = Import-Module dbatools, Pester
           $null = Invoke-Pester ./tests/actions-arm64.ps1 -Output Detailed -PassThru
           Get-DbatoolsError -All
 
