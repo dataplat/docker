@@ -18,7 +18,8 @@ sqlcmd -d master -Q "EXEC sp_dropserver @@SERVERNAME"
 sqlcmd -S localhost -d master -Q "EXEC sp_addserver 'mssql3', local"
 
 # Source -> http://stackoverflow.brentozar.com/StackOverflow2010.7z
-wget -O StackOverflow2010.7z https://dbatools.io/stackdb
-7z e StackOverflow2010.7z
+
+wget -O StackOverflow2010.7z http://stackoverflow.brentozar.com/StackOverflow2010.7z 2>&1 | tee -a /tmp/wget_logfile.log
+7z e StackOverflow2010.7z > /tmp/7z_logfile.log
 mv /tmp/Stack*mdf /var/opt/mssql/data/
 sqlcmd -S localhost -d master -i /tmp/attach-db.sql
