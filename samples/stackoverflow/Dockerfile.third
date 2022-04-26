@@ -43,11 +43,13 @@ RUN /bin/bash /tmp/start-sql.sh
 FROM dbatools/mssqlbase
 COPY --from=builder /var/opt/mssql /var/opt/mssql
 COPY --from=builder /opt/mssql-tools/bin /opt/mssql-tools/bin
+# COPY --from=builder /tmp /tmp
 
 # make a shared dir with the proper permissions
 USER root
 RUN mkdir /shared; chown mssql /shared
 RUN chown -R mssql /opt/
+# RUN chown -R mssql /tmp
 
 # run a rootless container
 USER mssql
