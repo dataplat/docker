@@ -54,3 +54,9 @@ jobs:
 
       - name: View manifest
         run: docker manifest inspect docker.io/dbatools/mssqlbase:latest
+
+      - uses: gautamkrishnar/keepalive-workflow@v1
+        with:
+          commit_message: keepalive to prevent workflow deactivation
+          committer_username: github-actions[bot]
+          committer_email: github-actions[bot]@users.noreply.github.com
