@@ -7,6 +7,8 @@ services:
     container_name: mssql1
     hostname: mssql1
     image: dbatools/sqlinstance
+    environment:
+      - MSSQL_DB=mydb1
     build:
       context: .
       labels:
@@ -28,6 +30,8 @@ services:
     container_name: mssql2
     hostname: mssql2
     image: dbatools/sqlinstance2
+    environment:
+      - MSSQL_DB=mydb2
     build:
       context: .
       labels:
