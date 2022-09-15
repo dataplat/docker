@@ -34,3 +34,19 @@ jobs:
         run: |
           $null = Invoke-Pester ./tests/actions.ps1 -Output Detailed -PassThru
           Get-DbatoolsError -All
+
+      - name: Remove containers
+        run: docker rm -vf mssql1 mssql2
+
+      - name: Recreate the scenario from the env PR
+        run: |
+          docker run -p 1433:1433  --volume shared:/shared:z --name mssql1 --hostname mssql1 --network localnet --env MSSQL_DB=mydb1 -d dbatools/sqlinstance
+          docker run -p 14333:1433 --volume shared:/shared:z --name mssql2 --hostname mssql2 --network localnet --env MSSQL_DB=mydb2 -d dbatools/sqlinstance2
+
+      - name: Test that commands continue to work with new build
+        run: |
+          $password = ConvertTo-SecureString "dbatools.IO" -AsPlainText -Force
+          $cred = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "sqladmin", $password
+
+          Get-DbaDatabase -SqlInstance localhost -SqlCredential $cred -Database mydb1 | Should -Not -BeNullOrEmpty
+          Get-DbaDatabase -SqlInstance localhost:14333 -SqlCredential $cred -Database mydb2 | Should -Not -BeNullOrEmpty
