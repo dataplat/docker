@@ -46,6 +46,7 @@ RUN /bin/bash /tmp/start-sql.sh
 FROM dbatools/mssqlbase
 COPY --from=builder /var/opt/mssql /var/opt/mssql
 COPY --from=builder /opt/mssql-tools/bin /opt/mssql-tools/bin
+COPY --from=builder /tmp/post-entrypoint.sh /opt/mssql/bin/post-entrypoint.sh
 
 # make a shared dir with the proper permissions
 USER root
@@ -53,8 +54,8 @@ RUN  mkdir /shared; chown mssql /shared
 
 # run a rootless container
 USER mssql
-ENTRYPOINT /opt/mssql/bin/sqlservr
-# CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
+# create a new database if env var is set
+ENTRYPOINT /opt/mssql/bin/sqlservr & /opt/mssql/bin/post-entrypoint.sh
 
 # label the container
 LABEL org.opencontainers.image.vendor="dbatools"
