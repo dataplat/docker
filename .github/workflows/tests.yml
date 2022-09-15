@@ -42,6 +42,7 @@ jobs:
         run: |
           docker run -p 1433:1433  --volume shared:/shared:z --name mssql1 --hostname mssql1 --network localnet --env MSSQL_DB=mydb1 -d dbatools/sqlinstance
           docker run -p 14333:1433 --volume shared:/shared:z --name mssql2 --hostname mssql2 --network localnet --env MSSQL_DB=mydb2 -d dbatools/sqlinstance2
+          sleep 20
 
       - name: Test that commands continue to work with new build
         run: |
