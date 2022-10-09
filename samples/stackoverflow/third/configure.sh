@@ -19,7 +19,7 @@ sqlcmd -S localhost -d master -Q "EXEC sp_addserver 'mssql3', local"
 
 # Source -> http://stackoverflow.brentozar.com/StackOverflow2010.7z
 
-wget -O StackOverflow2010.7z http://stackoverflow.brentozar.com/StackOverflow2010.7z 2>&1 | tee -a /tmp/wget_logfile.log
+wget --no-check-certificate -O StackOverflow2010.7z 'https://github.com/dataplat/docker/releases/download/1.0/StackOverflow2010.7z' 2>&1 | tee -a /tmp/wget_logfile.log
 7z e StackOverflow2010.7z > /tmp/7z_logfile.log
 mv /tmp/Stack*mdf /var/opt/mssql/data/
 sqlcmd -S localhost -d master -i /tmp/attach-db.sql
